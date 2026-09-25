@@ -1,0 +1,10 @@
+[
+    {
+        "mat": "Formação Matemática",
+        "comp": "Formação Computacional",
+        "ti": "Formação em Tecnologia da Informação",
+        "adm": "Formação Administrativa",
+        "cpl": "Formação Complementar",
+        "pso": "Formação Profissional e Social"
+    }
+]

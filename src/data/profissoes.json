@@ -1,0 +1,72 @@
+[
+    {
+        "id": "engenheiro_de_software",
+        "nome": "Engenheiro de Software",
+        "descricao": "Atua na concepção, projeto, desenvolvimento, teste e manutenção de sistemas de software, aplicando princípios, métodos e processos de engenharia para garantir a qualidade, confiabilidade, escalabilidade e desempenho das aplicações."
+    },
+    {
+        "id": "programador",
+        "nome": "Programador",
+        "descricao": "Responsável por codificar, implementar e testar algoritmos e programas de computador em diversas linguagens de programação, transformando especificações de projetos e requisitos em softwares funcionais."
+    },
+    {
+        "id": "web_designer",
+        "nome": "Web Designer",
+        "descricao": "Projeta a identidade visual, layout, estática e aspectos de navegabilidade de sites e aplicações web, focando na usabilidade, na estética e no alinhamento com a experiência do usuário (UX/UI)."
+    },
+    {
+        "id": "analista_de_teste",
+        "nome": "Analista de Teste",
+        "descricao": "Planeja, cria e executa testes de software (manuais e automatizados) para verificar a qualidade, identificar falhas/bugs e garantir que os sistemas atendam aos requisitos de qualidade e funcionamento especificados."
+    },
+    {
+        "id": "analista_de_sistemas",
+        "nome": "Analista de Sistemas",
+        "descricao": "Analisa processos de negócios e necessidades operacionais das organizações para projetar, especificar e implementar soluções de tecnologia da informação e sistemas informatizados integrados."
+    },
+    {
+        "id": "analista_de_requisitos",
+        "nome": "Analista de Requisitos",
+        "descricao": "Levanta, elicita, analisa, documenta e gerencia os requisitos e necessidades de usuários e clientes para orientação das equipes no desenvolvimento e na evolução de projetos de software."
+    },
+    {
+        "id": "analista_de_negocios",
+        "nome": "Analista de Negócios",
+        "descricao": "Atua na ponte entre os setores operacionais/estratégicos da empresa e a equipe de TI, compreendendo os modelos de negócios para identificar oportunidades de melhoria e orientar o desenvolvimento de soluções tecnológicas."
+    },
+    {
+        "id": "administrador_de_bancos_de_dados",
+        "nome": "Administrador de Bancos de Dados",
+        "descricao": "Gerencia, projeta, implementa, otimiza e mantém bases de dados organizacionais, garantindo a integridade, segurança, alta disponibilidade, recuperação e desempenho do acesso às informações."
+    },
+    {
+        "id": "administrador_e_gerente_de_redes_de_computadores",
+        "nome": "Administrador e Gerente de Redes de Computadores",
+        "descricao": "Projeta, instala, configura e gerencia a infraestrutura de redes de computadores e conectividade da organização, garantindo a comunicação contínua, o desempenho e a segurança da informação."
+    },
+    {
+        "id": "gerente_de_area_de_sistemas_de_informacao",
+        "nome": "Gerente de Área de Sistemas de Informação",
+        "descricao": "Lidera e coordena o departamento de Tecnologia da Informação e Sistemas de Informação, alinhando os investimentos e soluções tecnológicas aos objetivos estratégicos, operacionais e financeiros da organização."
+    },
+    {
+        "id": "empresario_na_area_de_sistemas_de_informacao",
+        "nome": "Empresário na Área de Sistemas de Informação",
+        "descricao": "Idealiza, fundar, gerencia e desenvolve empresas, startups ou novos empreendimentos focados em produtos, serviços e soluções inovadoras baseadas em tecnologia da informação."
+    },
+    {
+        "id": "consultor_na_area_de_sistemas_de_informacao",
+        "nome": "Consultor na Área de Sistemas de Informação",
+        "descricao": "Presta assessoria e consultoria especializada a organizações públicas ou privadas para avaliação, seleção, planejamento e implementação de soluções de infraestrutura, governança e sistemas de TI."
+    },
+    {
+        "id": "pesquisador",
+        "nome": "Pesquisador",
+        "descricao": "Investiga, desenvolve e aplica novos conceitos, métodos, algoritmos e tecnologias científicas na área de Ciência da Computação, Sistemas de Informação e áreas afins no meio acadêmico ou científico."
+    },
+    {
+        "id": "gerente_de_projetos",
+        "nome": "Gerente de Projetos",
+        "descricao": "Aplica metodologias, técnicas e ferramentas de gerenciamento para planejar, executar, monitorar, controlar prazos, recursos e equipes em empreendimentos e projetos tecnológicos."
+    }
+]

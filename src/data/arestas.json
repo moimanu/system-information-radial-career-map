@@ -1,0 +1,337 @@
+[
+  {
+    "origem": "obbgsin085",
+    "destino": "obbgsin009",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin101",
+    "destino": "obbgsin012",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin085",
+    "destino": "obbgsin010",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin009",
+    "destino": "obbgsin015",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin085",
+    "destino": "obbgsin016",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin013",
+    "destino": "obbgsin024",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin085",
+    "destino": "obbgsin017",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin101",
+    "destino": "obbgsin021",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin010",
+    "destino": "obbgsin022",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin101",
+    "destino": "obbgsin020",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin024",
+    "destino": "obbgsin030",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin085",
+    "destino": "obbgsin023",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin017",
+    "destino": "obbgsin041",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin012",
+    "destino": "obbgsin031",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin030",
+    "destino": "obbgsin029",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin001",
+    "destino": "obbgsin019",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin015",
+    "destino": "obbgsin038",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin010",
+    "destino": "obbgsin039",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin023",
+    "destino": "obbgsin039",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin016",
+    "destino": "obbgsin036",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin029",
+    "destino": "obbgsin037",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin030",
+    "destino": "obbgsin037",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin017",
+    "destino": "obbgsin026",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin011",
+    "destino": "obbgsin040",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin009",
+    "destino": "obbgsin034",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin031",
+    "destino": "obbgsin034",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin002",
+    "destino": "obbgsin091",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin011",
+    "destino": "obbgsin102",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin017",
+    "destino": "obbgsin103",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin091",
+    "destino": "obbgsin092",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin018",
+    "destino": "obbgsin035",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin018",
+    "destino": "obbgsin057",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin016",
+    "destino": "obbgsin033",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin012",
+    "destino": "obbgsin079",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin021",
+    "destino": "obbgsin079",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin011",
+    "destino": "obbgsin025",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin009",
+    "destino": "obbgsin070",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin021",
+    "destino": "obbgsin070",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin011",
+    "destino": "obbgsin081",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin017",
+    "destino": "obbgsin049",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin011",
+    "destino": "obbgsin054",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin011",
+    "destino": "obbgsin094",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin011",
+    "destino": "obbgsin060",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin001",
+    "destino": "obbgsin059",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin003",
+    "destino": "obbgsin006",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin003",
+    "destino": "obbgsin083",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin083",
+    "destino": "obbgsin084",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin001",
+    "destino": "obbgsin075",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin020",
+    "destino": "obbgsin028",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin011",
+    "destino": "obbgsin050",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin016",
+    "destino": "obbgsin068",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin031",
+    "destino": "obbgsin068",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin007",
+    "destino": "obbgsin008",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin009",
+    "destino": "obbgsin095",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin021",
+    "destino": "obbgsin095",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin029",
+    "destino": "obbgsin032",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin017",
+    "destino": "obbgsin074",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin009",
+    "destino": "obbgsin027",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin016",
+    "destino": "obbgsin063",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin017",
+    "destino": "obbgsin078",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin034",
+    "destino": "obbgsin096",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin010",
+    "destino": "obbgsin097",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin009",
+    "destino": "obbgsin064",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin013",
+    "destino": "obbgsin098",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin010",
+    "destino": "obbgsin065",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin009",
+    "destino": "obbgsin099",
+    "tipo": "dependencia"
+  },
+  {
+    "origem": "obbgsin029",
+    "destino": "obbgsin066",
+    "tipo": "dependencia"
+  }
+]
