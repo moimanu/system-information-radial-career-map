@@ -1,0 +1,546 @@
+/* 60:30:10 Color Palette & UI Requirements */
+:root {
+  /* 60% Dominant Background: Branco / Off-white */
+  --bg-primary: #ffffff;
+
+  /* 30% Secondary / Structural: Cinza muito claro */
+  --bg-secondary: #f4f6f8;
+  --bg-card: #eef2f5;
+  --border-color: #dcdfe4;
+
+  /* 10% Accent: Verde */
+  --accent-color: #2e7d32;
+  --accent-hover: #1b5e20;
+  --accent-light: #e8f5e9;
+
+  /* Text: Cinza muito escuro */
+  --text-primary: #1f2937;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+
+  /* Pastel Colors for Eixos de Formação */
+  --eixo-mat: #aec6cf;
+  /* Pastel Blue */
+  --eixo-comp: #ffb3ba;
+  /* Pastel Pink/Red */
+  --eixo-ti: #b5ead7;
+  /* Pastel Mint/Green */
+  --eixo-adm: #ffdfba;
+  /* Pastel Peach/Orange */
+  --eixo-cpl: #e2f0cb;
+  /* Pastel Lime */
+  --eixo-pso: #c7ceea;
+  /* Pastel Purple/Lavender */
+  --eixo-empty: #d3d3d3;
+  /* Soft Gray */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body,
+html {
+  width: 100%;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  overflow: hidden;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Floating Overlay Panels */
+.floating-panel {
+  position: absolute;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  backdrop-filter: blur(4px);
+}
+
+.floating-top {
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  width: calc(100% - 32px);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  overflow-x: auto;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  scrollbar-width: thin;
+}
+
+.floating-top::-webkit-scrollbar {
+  height: 4px;
+}
+
+.floating-top::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 2px;
+}
+
+.floating-top .eixos-container {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.floating-bottom-left {
+  bottom: 20px;
+  left: 20px;
+  border-radius: 8px;
+  padding: 8px 14px;
+}
+
+.eixos-container {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.eixo-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  user-select: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background-color: var(--bg-secondary);
+  transition: background-color 0.2s;
+  flex-shrink: 0;
+}
+
+.eixo-item:hover {
+  background-color: var(--bg-card);
+}
+
+.eixo-color-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Main Content & Canvas Layout */
+.main-content {
+  display: flex;
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+#graph-container {
+  flex: 1;
+  height: 100%;
+  position: relative;
+  background-color: var(--bg-primary);
+}
+
+svg#radial-graph {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Canvas Zoom Controls Overlay */
+.canvas-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 5;
+}
+
+.canvas-controls button {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.canvas-controls button#btn-reset {
+  width: auto;
+  padding: 0 12px;
+  font-size: 0.85rem;
+}
+
+.canvas-controls button:hover {
+  background-color: var(--bg-secondary);
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+/* Side Detail Panel Drawer */
+.detail-panel {
+  width: 380px;
+  background-color: var(--bg-primary);
+  border-left: 1px solid var(--border-color);
+  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.04);
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 20;
+  overflow-y: auto;
+  transition: transform 0.3s ease;
+  padding: 24px;
+}
+
+.detail-panel.hidden {
+  transform: translateX(100%);
+}
+
+.close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: var(--text-primary);
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: var(--accent-light);
+  color: var(--accent-color);
+  font-weight: bold;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-bottom: 8px;
+}
+
+#discipline-name {
+  font-size: 1.3rem;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.meta-info {
+  background-color: var(--bg-secondary);
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.tab-section {
+  margin-bottom: 20px;
+}
+
+.tab-section h3 {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  border-bottom: 2px solid var(--bg-card);
+  padding-bottom: 4px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tab-section p {
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.ring-line {
+  fill: none;
+  stroke: var(--border-color);
+  stroke-dasharray: 4, 4;
+  stroke-width: 1.5px;
+  pointer-events: none;
+}
+
+.ring-area-hover {
+  fill: transparent;
+  cursor: pointer;
+  pointer-events: all;
+  transition: fill 0.3s ease;
+}
+
+.ring-area-hover:hover {
+  fill: rgba(46, 125, 50, 0.05);
+}
+
+.ring-area-hover.active-layer {
+  fill: rgba(46, 125, 50, 0.08);
+  stroke: var(--accent-color);
+  stroke-width: 1.5px;
+  stroke-dasharray: 6, 3;
+}
+
+.ring-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background-color: var(--text-primary);
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 30;
+  white-space: nowrap;
+}
+
+.ring-tooltip.visible {
+  opacity: 1;
+}
+
+.edge-line {
+  stroke: #dee4eb;
+  stroke-width: 0.8px;
+  fill: none;
+  transition: opacity 0.3s;
+}
+
+.edge-line.highlighted {
+  stroke: var(--accent-color);
+  stroke-width: 2.5px;
+}
+
+.node-group {
+  cursor: pointer;
+}
+
+.node-circle {
+  stroke: #ffffff;
+  stroke-width: 2px;
+  transition: r 0.2s, stroke 0.2s;
+}
+
+.node-group:hover .node-circle {
+  stroke: var(--accent-color);
+  stroke-width: 3px;
+}
+
+.label-group {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.label-group.visible {
+  opacity: 1;
+}
+
+.label-bg {
+  fill: #ffffff;
+  stroke: #dcdfe4;
+  stroke-width: 1px;
+  rx: 4px;
+  ry: 4px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.12));
+}
+
+.node-label {
+  font-size: 0.78rem;
+  fill: var(--text-primary);
+  font-weight: 600;
+  pointer-events: none;
+}
+
+/* Dimmed state during tree focus view or layer highlight */
+.dimmed {
+  opacity: 0.15 !important;
+}
+
+.node-group {
+  cursor: pointer;
+  z-index: 10;
+}
+
+.node-group.dimmed {
+  opacity: 0.15 !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+.label-group.dimmed {
+  opacity: 0 !important;
+  display: none !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+.node-circle.center-node {
+  stroke: var(--accent-color);
+  stroke-width: 3px;
+  cursor: pointer;
+  filter: drop-shadow(0 2px 6px rgba(46, 125, 50, 0.3));
+  transition: r 0.2s, stroke 0.2s;
+}
+
+.node-group:hover .node-circle.center-node {
+  stroke: var(--accent-hover);
+  stroke-width: 4px;
+}
+
+.edge-line.dimmed {
+  opacity: 0.05 !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+/* Modal Overlay & Card for Profession Selector Popup */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.modal-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.modal-card {
+  background-color: var(--bg-primary);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 440px;
+  padding: 28px;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  transform: translateY(0);
+  transition: transform 0.25s ease;
+}
+
+.modal-overlay.hidden .modal-card {
+  transform: translateY(-20px);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+}
+
+.modal-close-btn:hover {
+  color: var(--text-primary);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.modal-icon {
+  font-size: 1.5rem;
+}
+
+.modal-header h3 {
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.modal-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.modal-body {
+  margin-bottom: 24px;
+}
+
+.modal-body select#profession-select {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  outline: none;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.modal-body select#profession-select:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-primary {
+  padding: 10px 20px;
+  background-color: var(--accent-color);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-hover);
+}

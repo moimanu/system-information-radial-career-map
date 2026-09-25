@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa de Carreira Radial - BSI IFMG OB</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- D3.js v7 CDN -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- Main Container: Graph Canvas & Detail Panel -->
+    <main class="main-content">
+      <div id="graph-container">
+        <svg id="radial-graph"></svg>
+
+        <!-- Floating Eixos Filters (Top Center) -->
+        <div class="floating-panel floating-top">
+          <div id="eixos-filters" class="eixos-container"></div>
+        </div>
+
+        <!-- Floating Natureza Filters (Bottom Left) -->
+        <div class="floating-panel floating-bottom-left">
+          <div id="natureza-filters" class="eixos-container"></div>
+        </div>
+
+        <!-- Controls Overlay (Zoom, Reset) -->
+        <div class="canvas-controls">
+          <button id="btn-zoom-in" title="Aumentar Zoom">+</button>
+          <button id="btn-zoom-out" title="Diminuir Zoom">−</button>
+          <button id="btn-reset" title="Resetar Visualização">↺</button>
+        </div>
+      </div>
+
+      <!-- Side Drawer / Detail Panel -->
+      <aside id="detail-panel" class="detail-panel hidden">
+        <button id="close-panel" class="close-btn">&times;</button>
+        <div class="panel-content">
+          <span id="discipline-code" class="badge"></span>
+          <h2 id="discipline-name"></h2>
+          <div class="meta-info">
+            <p><strong>Período:</strong> <span id="discipline-period"></span>º Semestre</p>
+            <p><strong>Eixo:</strong> <span id="discipline-eixo"></span></p>
+            <p><strong>Natureza:</strong> <span id="discipline-natureza"></span></p>
+            <p><strong>Metodologia:</strong> <span id="discipline-metodologia"></span></p>
+            <p><strong>Carga Horária:</strong> <span id="discipline-ch"></span>h (Teórica: <span
+                id="ch-teorica"></span>h | Prática: <span id="ch-pratica"></span>h)</p>
+          </div>
+
+          <div class="tab-section">
+            <h3>Ementa</h3>
+            <p id="discipline-ementa"></p>
+          </div>
+
+          <div class="tab-section">
+            <h3>Objetivos</h3>
+            <p id="discipline-objetivos"></p>
+          </div>
+
+          <div class="tab-section">
+            <h3>Bibliografia Básica</h3>
+            <p id="discipline-bib-basica"></p>
+          </div>
+
+          <div class="tab-section">
+            <h3>Bibliografia Complementar</h3>
+            <p id="discipline-bib-comp"></p>
+          </div>
+        </div>
+      </aside>
+    </main>
+    <!-- Profession Selection Popup Modal -->
+    <div id="profession-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <button id="close-profession-modal" class="modal-close-btn">&times;</button>
+        <div class="modal-header">
+          <h3>Selecionar Profissão / Perfil</h3>
+        </div>
+        <p class="modal-subtitle">Escolha uma profissão para visualizar o mapa de carreira correspondente:</p>
+        <div class="modal-body">
+          <select id="profession-select">
+            <option value="">Carregando profissões...</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button id="btn-confirm-profession" class="btn-primary">Confirmar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
