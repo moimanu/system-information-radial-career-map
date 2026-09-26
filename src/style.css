@@ -381,6 +381,12 @@ svg#radial-graph {
   stroke-width: 3px;
 }
 
+.node-circle.selected {
+  stroke: var(--accent-color) !important;
+  stroke-width: 3px !important;
+  filter: drop-shadow(0 0 6px rgba(46, 125, 50, 0.4));
+}
+
 .label-group {
   pointer-events: none;
   opacity: 0;
@@ -574,4 +580,30 @@ svg#radial-graph {
 
 .btn-primary:hover {
   background-color: var(--accent-hover);
+}
+
+/* Mobile Responsiveness — Detail Panel as Bottom Sheet */
+@media (max-width: 768px) {
+  :root {
+    --detail-panel-width: calc(100vw - 32px);
+  }
+
+  .detail-panel {
+    top: auto;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    height: 60vh;
+    transform: translateY(0);
+    border-radius: 16px 16px 0 0;
+  }
+
+  .detail-panel.hidden {
+    transform: translateY(calc(100% + 32px));
+  }
+
+  /* No mobile, o painel não desloca o conteúdo principal */
+  .main-content.panel-open .floating-top {
+    display: none;
+  }
 }

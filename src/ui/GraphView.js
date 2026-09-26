@@ -21,6 +21,7 @@ export class GraphView {
     this.svg = null;
     this.containerGroup = null;
     this.zoomBehavior = null;
+    this.selectedNodeId = null;
   }
 
   init() {
@@ -73,6 +74,7 @@ export class GraphView {
     this.svg.on('click', (event) => {
       if (event.target.tagName === 'svg') {
         if (this.store.state.treeFocusNodeId || this.store.state.selectedRingIndex) {
+          this.selectedNodeId = null;
           this.store.setState({ treeFocusNodeId: null, selectedRingIndex: null });
           this.eventBus.emit('panel:hide');
           this.updateNodePositions(true);
@@ -107,6 +109,13 @@ export class GraphView {
 
     this.eventBus.on('layout:update', ({ animate = true } = {}) => {
       this.updateNodePositions(animate);
+    });
+
+    this.eventBus.on('panel:hide', () => {
+      this.selectedNodeId = null;
+      if (this.containerGroup) {
+        this.containerGroup.selectAll('.node-circle').classed('selected', false);
+      }
     });
   }
 
@@ -264,6 +273,7 @@ export class GraphView {
     }
 
     nodesMerged.classed('dimmed', d => this.isNodeDimmed(d, layout));
+    nodesMerged.select('circle').classed('selected', d => d.id === this.selectedNodeId);
 
     nodesGroup.selectAll('.node-group').sort((a, b) => {
       const aDim = this.isNodeDimmed(a, layout);
@@ -363,9 +373,22 @@ export class GraphView {
         }
         if (this.isNodeDimmed(d, layout)) return;
 
+        // Verifica se o modo árvore já está ativo antes de atualizar o estado
+        const isAlreadyInTreeMode = this.store.state.treeFocusNodeId !== null;
+
+        // Define o nó selecionado para destaque visual (borda verde)
+        this.selectedNodeId = isAlreadyInTreeMode ? d.id : null;
+
+        // Atualiza o layout focado no nó clicado (radial→árvore ou navegação na árvore)
         this.store.setState({ treeFocusNodeId: d.id, selectedRingIndex: null });
-        this.eventBus.emit('panel:show', d);
         this.updateNodePositions(true);
+
+        // Exibe o painel apenas se já estivesse no modo árvore
+        if (isAlreadyInTreeMode) {
+          this.eventBus.emit('panel:show', d);
+        } else {
+          this.eventBus.emit('panel:hide'); // Garante que o painel feche ao transitar do radial
+        }
       });
 
     this.updateGraphVisibility();

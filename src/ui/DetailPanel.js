@@ -34,10 +34,7 @@ export class DetailPanel {
     if (this.closeBtn) {
       this.closeBtn.addEventListener('click', () => {
         this.hide();
-        if (this.store.state.treeFocusNodeId) {
-          this.store.setState({ treeFocusNodeId: null });
-          this.eventBus.emit('layout:update', { animate: true });
-        }
+        this.eventBus.emit('panel:hide');
       });
     }
 
