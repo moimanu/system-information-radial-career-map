@@ -2,7 +2,7 @@ import json
 
 def processar_disciplinas():
     # 1. Carregar o arquivo de mapeamento de eixos
-    with open('../../src/data/eixos-formacao.json', 'r', encoding='utf-8') as f:
+    with open('../data/processed/eixos-formacao.json', 'r', encoding='utf-8') as f:
         eixos_data = json.load(f)[0] # Primeiro elemento da lista
         
     # Inverter o dicionário para mapear do NOME DO EIXO para a CHAVE
@@ -106,7 +106,7 @@ def processar_disciplinas():
     }
 
     # 3. Carregar o arquivo de disciplinas
-    with open('../../src/data/disciplinas.json', 'r', encoding='utf-8') as f:
+    with open('../data/processed/disciplinas.json', 'r', encoding='utf-8') as f:
         disciplinas = json.load(f)
 
     # 4. Injetar a chave do eixo de formação em cada disciplina
@@ -122,7 +122,7 @@ def processar_disciplinas():
             disc["eixoFormacao"] = mapeamento_manual[codigo]
 
     # 5. Salvar as atualizações de volta no disciplinas.json
-    with open('../../src/data/disciplinas.json', 'w', encoding='utf-8') as f:
+    with open('../data/processed/disciplinas.json', 'w', encoding='utf-8') as f:
         json.dump(disciplinas, f, ensure_ascii=False, indent=2)
 
     print("Chaves de eixos injetadas com sucesso em disciplinas.json!")

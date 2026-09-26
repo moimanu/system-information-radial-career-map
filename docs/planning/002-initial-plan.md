@@ -12,9 +12,7 @@ Requisitos de UI:
 
 - Não precisa de espaços para logotipos, títulos, descrições e coisas assim.
 
-- Deve haver 1 dropdown no topo para profissão.
-
-- Deve haver uma legenda para eixos de formação, onde eu consiga filtrar via checkbox.
+- Deve haver uma legenda para eixos de formação, onde eu consiga filtrar via checkbox no topo da tela em um componente flutuante.
 
 Requisitos de UX:
 
@@ -26,9 +24,9 @@ Requisitos de UX:
 
 - Os vértices devem ser posicionados nas camadas
 
-- O vértice de profissão fica no meio
+- O vértice de profissão fica no centro
 
-- Deve ter um dropdown no topo para escolher uma profissão, o que deve alterar o grafo utilizando uma animação
+- Ao clicar no vértice central, deve abrir um modal para escolher a profissao (via dropdown), o que deve alterar o grafo utilizando uma animação
 
 - Os vértices precisam de labels que sejam o "nome"
 
@@ -36,7 +34,9 @@ Requisitos de UX:
 
 - O hover em um vértice exibe o label (o label deve sobrepor o gráfico e os vértices para facilitar a visualização)
 
-- O hover na seção de uma área radial exibe o label de todos os vértices daquele nível
+- Ao clicar na área de uma camada, devem aparecer os labels de todos os vértices daquela camada
+
+- O hover em na área de uma camada deve exibir um label para indicar o nível da camada
 
 - Nunca deve ser possível ver todos os labels de todos os vértices ao mesmo tempo
 
@@ -56,7 +56,7 @@ Requisitos de UX:
 
 Requisitos técnicos:
 
-Gerar um index.html, um app.js e um style.css dentro de src. Essa aplicação deve consumir os jsons presentes em data/, sendo eles:
+-Essa aplicação deve consumir os jsons presentes em data/, sendo eles:
 
 arestas.json
 disciplinas.json

@@ -154,4 +154,4 @@ def atualizar_dependencias(caminho_entrada: str, caminho_saida: str = None) -> N
 
 if __name__ == '__main__':
     # Execução principal salvando no próprio ficheiro ou num novo caminho
-    atualizar_dependencias('../../src/data/disciplinas.json')
+    atualizar_dependencias('../data/processed/disciplinas.json')
