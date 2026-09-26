@@ -2,97 +2,383 @@
 <html lang="pt-BR">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mapa de Carreira Radial - BSI IFMG OB</title>
-  <link rel="stylesheet" href="src/style.css">
-  <!-- D3.js v7 CDN -->
-  <script src="https://d3js.org/d3.v7.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding - Mapa de Carreira Radial</title>
+    <style>
+        /* CSS Reset & Variáveis Base */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f4f6f8;
+            --bg-card: #eef2f5;
+            --border-color: #dcdfe4;
+            --accent-color: #2e7d32;
+            --accent-hover: #1b5e20;
+            --accent-light: #e8f5e9;
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+            --text-muted: #6b7280;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Layout Tela Cheia */
+        .onboarding-screen {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        /* Topo: Barra de Progresso */
+        .progress-header {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background-color: var(--bg-card);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: var(--accent-color);
+            width: 16.66%;
+            transition: width 0.3s ease;
+        }
+
+        /* Conteúdo dos Passos em Tela Cheia */
+        .step-container {
+            position: relative;
+            min-height: 260px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .step-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .step-content.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .step-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .step-description {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Caixa da Dica de Uso */
+        .tip-box {
+            background-color: var(--accent-light);
+            border-left: 4px solid var(--accent-color);
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            font-size: 1rem;
+            color: var(--accent-hover);
+            line-height: 1.5;
+        }
+
+        .tip-box strong {
+            font-weight: 600;
+        }
+
+        /* Navegação */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding-top: 16px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-secondary);
+            border-color: var(--border-color);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            margin-left: auto;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* Créditos no Rodapé */
+        .app-footer {
+            text-align: center;
+            padding: 16px 24px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+        }
+
+        .app-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .app-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Ajustes Mobile */
+        @media (max-width: 600px) {
+            .onboarding-screen {
+                padding: 24px 16px;
+                justify-content: space-between;
+            }
+
+            .step-title {
+                font-size: 1.5rem;
+            }
+
+            .step-description {
+                font-size: 1rem;
+            }
+
+            .btn {
+                padding: 12px 20px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-  <div id="app">
-    <!-- Main Container: Graph Canvas & Detail Panel -->
-    <main class="main-content">
-      <div id="graph-container">
-        <svg id="radial-graph"></svg>
 
-        <!-- Floating Eixos Filters (Top Center) -->
-        <div class="floating-panel floating-top">
-          <div id="eixos-filters" class="eixos-container"></div>
+    <main class="onboarding-screen">
+        <!-- Indicador de Progresso -->
+        <header class="progress-header">
+            <div class="progress-info">
+                <span>Passo <span id="current-step-num">1</span> de 6</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div id="progress-fill" class="progress-bar-fill"></div>
+            </div>
+        </header>
+
+        <!-- Conteúdo dos Steps -->
+        <section class="step-container">
+
+            <!-- Step 1 -->
+            <article class="step-content active" data-step="1">
+                <h1 class="step-title">Sobre o Projeto</h1>
+                <p class="step-description">
+                    O Mapa de Carreira Radial é uma ferramenta interativa para estudantes do Bacharelado em Sistemas de
+                    Informação (IFMG - Campus Ouro Branco).
+                </p>
+                <div class="tip-box">
+                    <strong>Dica de uso:</strong> Explore as conexões entre disciplinas e o perfil profissional
+                    desejado.
+                </div>
+            </article>
+
+            <!-- Step 2 -->
+            <article class="step-content" data-step="2">
+                <h2 class="step-title">Nó Central (Perfil Profissional)</h2>
+                <p class="step-description">
+                    Representa a profissão selecionada (ex: Engenheiro de Software, Web Designer ou Pesquisador).
+                </p>
+                <div class="tip-box">
+                    <strong>Dica de uso:</strong> Clique ou altere o nó central para mudar o foco da sua carreira.
+                </div>
+            </article>
+
+            <!-- Step 3 -->
+            <article class="step-content" data-step="3">
+                <h2 class="step-title">Vértices (Disciplinas)</h2>
+                <p class="step-description">
+                    Círculos que representam as matérias do curso. A cor do círculo identifica o seu Eixo de Formação.
+                </p>
+                <div class="tip-box">
+                    <strong>Dica de uso:</strong> Clique em um vértice para ver detalhes e informações da disciplina.
+                </div>
+            </article>
+
+            <!-- Step 4 -->
+            <article class="step-content" data-step="4">
+                <h2 class="step-title">Anéis Concêntricos (Relevância)</h2>
+                <p class="step-description">
+                    A distância do centro indica prioridade: quanto mais próxima do centro a disciplina estiver, mais
+                    essencial ela é para o perfil.
+                </p>
+                <div class="tip-box">
+                    <strong>Dica de uso:</strong> Observe a proximidade dos nós para entender a prioridade do seu
+                    estudo.
+                </div>
+            </article>
+
+            <!-- Step 5 -->
+            <article class="step-content" data-step="5">
+                <h2 class="step-title">Arestas (Dependências de Conhecimento)</h2>
+                <p class="step-description">
+                    As setas conectam as disciplinas indicando o fluxo recomendado de aprendizado (dependências de
+                    conhecimento, não pré-requisitos formais).
+                </p>
+                <div class="tip-box">
+                    <strong>Dica de uso:</strong> Siga as setas para planejar qual disciplina estudar primeiro.
+                </div>
+            </article>
+
+            <!-- Step 6 -->
+            <article class="step-content" data-step="6">
+                <h2 class="step-title">Eixos de Formação & Legenda</h2>
+                <p class="step-description">
+                    Agrupamento temático das disciplinas por cores na legenda do sistema.
+                </p>
+                <div class="tip-box">
+                    <strong>Dica de uso:</strong> Use os filtros da legenda para destacar eixos específicos no grafo.
+                </div>
+            </article>
+
+        </section>
+
+        <!-- Botões de Navegação -->
+        <div class="nav-buttons">
+            <button id="btn-prev" class="btn btn-secondary" disabled>Anterior</button>
+            <button id="btn-next" class="btn btn-primary">Próximo</button>
         </div>
-
-        <!-- Floating Natureza Filters (Bottom Left) -->
-        <div class="floating-panel floating-bottom-left">
-          <div id="natureza-filters" class="eixos-container"></div>
-        </div>
-
-        <!-- Controls Overlay (Zoom, Reset) -->
-        <div class="canvas-controls">
-          <button id="btn-zoom-in" title="Aumentar Zoom">+</button>
-          <button id="btn-zoom-out" title="Diminuir Zoom">−</button>
-          <button id="btn-reset" title="Resetar Visualização">↺</button>
-        </div>
-      </div>
-
-      <!-- Side Drawer / Detail Panel -->
-      <aside id="detail-panel" class="detail-panel hidden">
-        <button id="close-panel" class="close-btn">&times;</button>
-        <div class="panel-content">
-          <span id="discipline-code" class="badge"></span>
-          <h2 id="discipline-name"></h2>
-          <div class="meta-info">
-            <p><strong>Período:</strong> <span id="discipline-period"></span>º Semestre</p>
-            <p><strong>Eixo:</strong> <span id="discipline-eixo"></span></p>
-            <p><strong>Natureza:</strong> <span id="discipline-natureza"></span></p>
-            <p><strong>Metodologia:</strong> <span id="discipline-metodologia"></span></p>
-            <p><strong>Carga Horária:</strong> <span id="discipline-ch"></span>h (Teórica: <span
-                id="ch-teorica"></span>h | Prática: <span id="ch-pratica"></span>h)</p>
-          </div>
-
-          <div class="tab-section">
-            <h3>Ementa</h3>
-            <p id="discipline-ementa"></p>
-          </div>
-
-          <div class="tab-section">
-            <h3>Objetivos</h3>
-            <p id="discipline-objetivos"></p>
-          </div>
-
-          <div class="tab-section">
-            <h3>Bibliografia Básica</h3>
-            <p id="discipline-bib-basica"></p>
-          </div>
-
-          <div class="tab-section">
-            <h3>Bibliografia Complementar</h3>
-            <p id="discipline-bib-comp"></p>
-          </div>
-        </div>
-      </aside>
     </main>
-    <!-- Profession Selection Popup Modal -->
-    <div id="profession-modal" class="modal-overlay hidden">
-      <div class="modal-card">
-        <button id="close-profession-modal" class="modal-close-btn">&times;</button>
-        <div class="modal-header">
-          <h3>Selecionar Profissão / Perfil</h3>
-        </div>
-        <p class="modal-subtitle">Escolha uma profissão para visualizar o mapa de carreira correspondente:</p>
-        <div class="modal-body">
-          <select id="profession-select">
-            <option value="">Carregando profissões...</option>
-          </select>
-        </div>
-        <div class="modal-footer">
-          <button id="btn-confirm-profession" class="btn-primary">Confirmar</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <script type="module" src="src/main.js"></script>
+    <!-- Rodapé com Crédito -->
+    <footer class="app-footer">
+        Desenvolvido por <a href="https://github.com/moimanu" target="_blank" rel="noopener noreferrer">Moisés
+            Emanuel</a>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const totalSteps = 6;
+            let currentStep = 1;
+
+            const btnPrev = document.getElementById('btn-prev');
+            const btnNext = document.getElementById('btn-next');
+            const currentStepNum = document.getElementById('current-step-num');
+            const progressFill = document.getElementById('progress-fill');
+            const steps = document.querySelectorAll('.step-content');
+
+            function updateStep(newStep) {
+                if (newStep < 1 || newStep > totalSteps) return;
+
+                // Oculta step atual
+                const currentActive = document.querySelector('.step-content.active');
+                if (currentActive) {
+                    currentActive.classList.remove('active');
+                }
+
+                currentStep = newStep;
+
+                // Exibe novo step após pequeno delay para animação suave
+                setTimeout(() => {
+                    const nextActive = document.querySelector(`.step-content[data-step="${currentStep}"]`);
+                    if (nextActive) {
+                        nextActive.classList.add('active');
+                    }
+                }, 50);
+
+                // Atualiza numeração e barra de progresso
+                currentStepNum.textContent = currentStep;
+                progressFill.style.width = `${(currentStep / totalSteps) * 100}%`;
+
+                // Atualiza estado dos botões
+                btnPrev.disabled = currentStep === 1;
+
+                if (currentStep === totalSteps) {
+                    btnNext.textContent = 'Acessar Mapa de Carreira';
+                } else {
+                    btnNext.textContent = 'Próximo';
+                }
+            }
+
+            btnPrev.addEventListener('click', () => {
+                updateStep(currentStep - 1);
+            });
+
+            btnNext.addEventListener('click', () => {
+                if (currentStep === totalSteps) {
+                    window.location.href = 'grafo.html';
+                } else {
+                    updateStep(currentStep + 1);
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

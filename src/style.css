@@ -62,7 +62,8 @@ body,
 html {
   width: 100%;
   height: 100vh;
-  height: 100dvh; /* Garante que a altura respeite a área visível do navegador móvel */
+  height: 100dvh;
+  /* Garante que a altura respeite a área visível do navegador móvel */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--bg-secondary);
   color: var(--text-primary);
@@ -73,7 +74,8 @@ html {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  height: 100dvh; /* Ajuste dinâmico */
+  height: 100dvh;
+  /* Ajuste dinâmico */
   width: 100vw;
 }
 
@@ -144,7 +146,7 @@ html {
   font-size: 0.85rem;
   cursor: pointer;
   user-select: none;
-  padding: 4px 10px;
+  padding: 6px 10px;
   border-radius: 4px;
   background-color: var(--bg-secondary);
   transition: background-color 0.2s;
@@ -214,7 +216,6 @@ svg#radial-graph {
 
 .canvas-controls button#btn-reset {
   width: auto;
-  padding: 0 12px;
   font-size: 0.85rem;
 }
 
@@ -222,6 +223,40 @@ svg#radial-graph {
   background-color: var(--bg-secondary);
   border-color: var(--accent-color);
   color: var(--accent-color);
+}
+
+/* Anchor-based control buttons (GitHub, Home) */
+.canvas-controls a {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.canvas-controls a:hover {
+  background-color: var(--bg-secondary);
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+/* Visual separator between zoom controls and nav controls */
+.controls-divider {
+  width: 24px;
+  height: 1px;
+  background: var(--border-color);
+  margin: 2px auto;
+  opacity: 0.6;
 }
 
 /* Side Detail Panel Drawer (Floating) */
@@ -596,7 +631,8 @@ svg#radial-graph {
     bottom: 12px;
     left: 12px;
     padding: 6px 10px;
-    max-width: calc(100vw - 80px); /* Previne sobreposição com os botões de zoom */
+    max-width: calc(100vw - 80px);
+    /* Previne sobreposição com os botões de zoom */
     overflow-x: auto;
   }
 
@@ -619,6 +655,11 @@ svg#radial-graph {
     font-size: 1rem;
   }
 
+  .canvas-controls a {
+    width: 32px;
+    height: 32px;
+  }
+
   /* 3. Ajuste da barra superior (Eixos) */
   .floating-top {
     top: 12px;
@@ -632,7 +673,8 @@ svg#radial-graph {
     bottom: 12px;
     left: 12px;
     right: 12px;
-    height: 55dvh; /* Utiliza altura dinâmica para não estourar a viewport */
+    height: 55dvh;
+    /* Utiliza altura dinâmica para não estourar a viewport */
     max-height: 80%;
     transform: translateY(0);
     border-radius: 16px 16px 0 0;

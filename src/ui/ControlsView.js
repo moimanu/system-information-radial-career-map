@@ -14,6 +14,9 @@ export class ControlsView {
     this.btnZoomIn = document.getElementById('btn-zoom-in');
     this.btnZoomOut = document.getElementById('btn-zoom-out');
     this.btnReset = document.getElementById('btn-reset');
+    this.btnFullscreen = document.getElementById('btn-fullscreen');
+    this.iconExpand = document.getElementById('icon-expand');
+    this.iconCompress = document.getElementById('icon-compress');
   }
 
   init() {
@@ -85,6 +88,13 @@ export class ControlsView {
     });
   }
 
+  /** Update the fullscreen button icons based on current state */
+  _updateFullscreenIcons() {
+    const isFs = !!document.fullscreenElement;
+    if (this.iconExpand) this.iconExpand.style.display = isFs ? 'none' : '';
+    if (this.iconCompress) this.iconCompress.style.display = isFs ? '' : 'none';
+  }
+
   bindEvents() {
     if (this.btnZoomIn) {
       this.btnZoomIn.addEventListener('click', () => {
@@ -104,6 +114,22 @@ export class ControlsView {
         this.eventBus.emit('panel:hide');
         this.eventBus.emit('zoom:reset');
         this.eventBus.emit('layout:update', { animate: true });
+      });
+    }
+
+    // Fullscreen toggle
+    if (this.btnFullscreen) {
+      this.btnFullscreen.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+          document.exitFullscreen().catch(() => {});
+        }
+      });
+
+      // Sync icon when fullscreen changes externally (e.g. Escape key)
+      document.addEventListener('fullscreenchange', () => {
+        this._updateFullscreenIcons();
       });
     }
   }
