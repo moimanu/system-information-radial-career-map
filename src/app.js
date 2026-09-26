@@ -152,7 +152,7 @@ function initUI() {
 
   const eixosList = Object.entries(state.eixosFormacao);
   // Add empty option if any discipline has empty eixo
-  eixosList.push(["", "Outros / Não Definido"]);
+  //eixosList.push(["", "Outros / Não Definido"]);
 
   eixosList.forEach(([key, name]) => {
     const label = document.createElement('label');
