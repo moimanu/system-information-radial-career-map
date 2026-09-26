@@ -194,8 +194,17 @@ export class GraphView {
     }
 
     // 2. RENDER EDGES (Conexões) with d3.join()
+    // OTIMIZADO: Filtra apenas as arestas do subgrafo ativo antes do .join()
     const edgesGroup = g.select('.layer-edges');
-    const edgeData = this.store.state.arestas.map(e => ({
+    let edgeData = this.store.state.arestas;
+
+    if (layout.isTreeMode || layout.isLayerMode) {
+      edgeData = edgeData.filter(e =>
+        layout.subgraphNodes.has(e.origem) && layout.subgraphNodes.has(e.destino)
+      );
+    }
+
+    edgeData = edgeData.map(e => ({
       ...e,
       id: `${e.origem}->${e.destino}`
     }));
@@ -203,16 +212,23 @@ export class GraphView {
     const edgesMerged = edgesGroup.selectAll('.edge-line')
       .data(edgeData, d => d.id)
       .join(
-        enter => enter.append('line').attr('class', 'edge-line').attr('marker-end', 'url(#arrow)'),
+        enter => {
+          const line = enter.append('line')
+            .attr('class', 'edge-line')
+            .attr('marker-end', 'url(#arrow)');
+
+          // Posiciona instantaneamente as pontas da aresta sem animação inicial
+          line
+            .attr('x1', d => layout.nodePositions[d.origem]?.x || 0)
+            .attr('y1', d => layout.nodePositions[d.origem]?.y || 0)
+            .attr('x2', d => layout.nodePositions[d.destino]?.x || 0)
+            .attr('y2', d => layout.nodePositions[d.destino]?.y || 0);
+
+          return line;
+        },
         update => update,
         exit => exit.remove()
-      )
-      .classed('dimmed', d => {
-        if (layout.isTreeMode || layout.isLayerMode) {
-          return !(layout.subgraphNodes.has(d.origem) && layout.subgraphNodes.has(d.destino));
-        }
-        return false;
-      });
+      );
 
     if (animate) {
       edgesMerged.transition().duration(duration)
@@ -229,6 +245,7 @@ export class GraphView {
     }
 
     // 3. RENDER NODES (Vértices) with d3.join()
+    // OTIMIZADO: Mantém apenas os nós do subgrafo ativo antes do .join()
     const nodesGroup = g.select('.layer-nodes');
     const profObj = this.store.state.profissoes.find(p => p.id === this.store.state.selectedProfessionId);
     const centerNode = {
@@ -236,7 +253,16 @@ export class GraphView {
       nome: profObj ? profObj.nome : 'Profissão',
       isCenter: true
     };
-    const allNodes = [centerNode, ...this.store.state.disciplinas];
+
+    let filteredDisciplinas = this.store.state.disciplinas;
+
+    if (layout.isTreeMode || layout.isLayerMode) {
+      filteredDisciplinas = filteredDisciplinas.filter(d => layout.subgraphNodes.has(d.id));
+    }
+
+    const allNodes = (layout.isTreeMode || layout.isLayerMode)
+      ? filteredDisciplinas
+      : [centerNode, ...filteredDisciplinas];
 
     const nodesMerged = nodesGroup.selectAll('.node-group')
       .data(allNodes, d => d.id)
@@ -244,6 +270,11 @@ export class GraphView {
         enter => {
           const group = enter.append('g').attr('class', 'node-group');
           group.append('circle');
+          // Posiciona instantaneamente os novos vértices na posição correta sem animação
+          group.attr('transform', d => {
+            const pos = layout.nodePositions[d.id] || { x: 0, y: 0 };
+            return `translate(${pos.x}, ${pos.y})`;
+          });
           return group;
         },
         update => update,
@@ -284,8 +315,11 @@ export class GraphView {
     });
 
     // 4. RENDER LABELS with d3.join()
+    // OTIMIZADO: Usa apenas as disciplinas visíveis no layout
     const labelsGroup = g.select('.layer-labels');
-    const labelNodes = this.store.state.disciplinas;
+    const labelNodes = (layout.isTreeMode || layout.isLayerMode)
+      ? this.store.state.disciplinas.filter(d => layout.subgraphNodes.has(d.id))
+      : this.store.state.disciplinas;
 
     const labelsMerged = labelsGroup.selectAll('.label-group')
       .data(labelNodes, d => d.id)
@@ -297,6 +331,11 @@ export class GraphView {
             .attr('class', 'node-label')
             .attr('dy', 22)
             .attr('text-anchor', 'middle');
+          // Posiciona instantaneamente as novas labels na posição correta sem animação
+          group.attr('transform', d => {
+            const pos = layout.nodePositions[d.id] || { x: 0, y: 0 };
+            return `translate(${pos.x}, ${pos.y})`;
+          });
           return group;
         },
         update => update,
