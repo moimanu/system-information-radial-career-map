@@ -132,12 +132,12 @@ def injetar_camadas_por_profissao(dados_disciplinas):
 
 
 if __name__ == "__main__":
-    with open("src/data/disciplinas.json", "r", encoding="utf-8") as f:
+    with open("../../src/data/disciplinas.json", "r", encoding="utf-8") as f:
         disciplinas_brutas = json.load(f)
 
     disciplinas_processadas = injetar_camadas_por_profissao(disciplinas_brutas)
 
-    with open("src/data/disciplinas.json", "w", encoding="utf-8") as f:
+    with open("../../src/data/disciplinas.json", "w", encoding="utf-8") as f:
         json.dump(disciplinas_processadas, f, indent=2, ensure_ascii=False)
 
     print(f"Sucesso! Processamento concluído para {len(disciplinas_processadas)} disciplinas na nova escala (1=forte, 10=fraco).")

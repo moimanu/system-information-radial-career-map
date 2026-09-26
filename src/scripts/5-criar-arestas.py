@@ -33,4 +33,4 @@ def gerar_arestas(caminho_arquivo_entrada, caminho_arquivo_saida):
 
 # Execução do script
 if __name__ == "__main__":
-    gerar_arestas('src/data/disciplinas.json', 'src/data/arestas.json')
+    gerar_arestas('../../src/data/disciplinas.json', '../../src/data/arestas.json')

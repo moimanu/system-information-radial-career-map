@@ -787,7 +787,7 @@ function updateNodePositions(animate = true) {
   nodesMerged
     .on('mouseenter', (event, d) => {
       if (d.isCenter) {
-        showRingTooltip(event, `${d.nome} (Clique para alterar profissão)`);
+        showRingTooltip(event, `${d.nome}`);
         return;
       }
       if (isNodeDimmed(d, layout)) return;

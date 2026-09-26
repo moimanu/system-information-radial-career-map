@@ -210,7 +210,7 @@ def pdf_para_json_disciplinas(
 
 
 # --- Execução ---
-arquivo_pdf = "docs/EMENTARIO-BSI-2020.pdf"
-arquivo_json = "src/data/disciplinas.json"
+arquivo_pdf = "../../docs/EMENTARIO-BSI-2020.pdf"
+arquivo_json = "../../src/data/disciplinas.json"
 
 pdf_para_json_disciplinas(arquivo_pdf, arquivo_json)

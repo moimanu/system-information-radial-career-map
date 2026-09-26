@@ -370,6 +370,7 @@ svg#radial-graph {
   rx: 4px;
   ry: 4px;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.12));
+  transform: translateY(10px);
 }
 
 .node-label {
@@ -377,6 +378,7 @@ svg#radial-graph {
   fill: var(--text-primary);
   font-weight: 600;
   pointer-events: none;
+  transform: translateY(10px);
 }
 
 /* Dimmed state during tree focus view or layer highlight */
