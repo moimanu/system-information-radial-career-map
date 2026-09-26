@@ -68,11 +68,15 @@ export class DetailPanel {
     if (this.bibCompEl) this.bibCompEl.textContent = d.bibliografiaComplementar || 'Nenhuma bibliografia cadastrada.';
 
     this.panelEl.classList.remove('hidden');
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) mainContent.classList.add('panel-open');
   }
 
   hide() {
     if (this.panelEl) {
       this.panelEl.classList.add('hidden');
     }
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) mainContent.classList.remove('panel-open');
   }
 }
