@@ -22,20 +22,9 @@ export class RadialLayout {
     const maxRadius = 500;
     const baseStep = maxRadius / 10;
     const ringRadii = [];
-    const targetR10 = maxRadius;
 
     for (let i = 1; i <= 10; i++) {
-      if (selectedRingIndex && !treeFocusNodeId) {
-        if (i === selectedRingIndex) {
-          ringRadii[i] = targetR10;
-        } else if (i < selectedRingIndex) {
-          ringRadii[i] = (targetR10 / selectedRingIndex) * i;
-        } else {
-          ringRadii[i] = targetR10;
-        }
-      } else {
-        ringRadii[i] = baseStep * i;
-      }
+      ringRadii[i] = baseStep * i;
     }
 
     const layerGroups = {};
@@ -80,6 +69,6 @@ export class RadialLayout {
       }
     });
 
-    return { ringRadii, nodePositions, isTreeMode: false, subgraphNodes: null };
+    return { ringRadii, nodePositions, isTreeMode: false, isLayerMode: false, subgraphNodes: null };
   }
 }

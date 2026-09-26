@@ -1,5 +1,6 @@
 import { RadialLayout } from '../strategies/RadialLayout.js';
 import { TreeLayout } from '../strategies/TreeLayout.js';
+import { LayerLayout } from '../strategies/LayerLayout.js';
 import { normalizeLayer } from '../domain/LayerNormalizer.js';
 import { EIXO_COLORS } from './EixoColors.js';
 
@@ -13,6 +14,7 @@ export class GraphView {
 
     this.radialStrategy = new RadialLayout();
     this.treeStrategy = new TreeLayout();
+    this.layerStrategy = new LayerLayout();
 
     // Cache DOM container
     this.container = document.getElementById('graph-container');
@@ -121,20 +123,21 @@ export class GraphView {
   }
 
   isNodeDimmed(d, layout) {
-    if (layout.isTreeMode) {
+    if (layout.isTreeMode || layout.isLayerMode) {
       if (d.isCenter) return true;
       return !layout.subgraphNodes.has(d.id);
-    }
-    if (this.store.state.selectedRingIndex !== null) {
-      if (d.isCenter) return true;
-      const layer = normalizeLayer(d.camadasPorProfissao?.[this.store.state.selectedProfessionId]);
-      return layer !== this.store.state.selectedRingIndex;
     }
     return false;
   }
 
   updateNodePositions(animate = true) {
-    const strategy = this.store.state.treeFocusNodeId ? this.treeStrategy : this.radialStrategy;
+    let strategy = this.radialStrategy;
+    if (this.store.state.treeFocusNodeId) {
+      strategy = this.treeStrategy;
+    } else if (this.store.state.selectedRingIndex) {
+      strategy = this.layerStrategy;
+    }
+
     const layout = strategy.calculate(this.store);
     const g = this.containerGroup;
     const duration = animate ? 750 : 0;
@@ -196,13 +199,8 @@ export class GraphView {
         exit => exit.remove()
       )
       .classed('dimmed', d => {
-        if (layout.isTreeMode) {
+        if (layout.isTreeMode || layout.isLayerMode) {
           return !(layout.subgraphNodes.has(d.origem) && layout.subgraphNodes.has(d.destino));
-        }
-        if (this.store.state.selectedRingIndex) {
-          const origLayer = normalizeLayer(this.store.state.disciplinas.find(x => x.id === d.origem)?.camadasPorProfissao?.[this.store.state.selectedProfessionId]);
-          const destLayer = normalizeLayer(this.store.state.disciplinas.find(x => x.id === d.destino)?.camadasPorProfissao?.[this.store.state.selectedProfessionId]);
-          return origLayer !== this.store.state.selectedRingIndex && destLayer !== this.store.state.selectedRingIndex;
         }
         return false;
       });
@@ -365,7 +363,7 @@ export class GraphView {
         }
         if (this.isNodeDimmed(d, layout)) return;
 
-        this.store.state.treeFocusNodeId = d.id;
+        this.store.setState({ treeFocusNodeId: d.id, selectedRingIndex: null });
         this.eventBus.emit('panel:show', d);
         this.updateNodePositions(true);
       });
@@ -409,27 +407,28 @@ export class GraphView {
     if (!g) return;
 
     if (!layout) {
-      const strategy = this.store.state.treeFocusNodeId ? this.treeStrategy : this.radialStrategy;
+      let strategy = this.radialStrategy;
+      if (this.store.state.treeFocusNodeId) {
+        strategy = this.treeStrategy;
+      } else if (this.store.state.selectedRingIndex) {
+        strategy = this.layerStrategy;
+      }
       layout = strategy.calculate(this.store);
     }
 
-    const { hoveredNodeId, selectedRingIndex, selectedProfessionId } = this.store.state;
+    const { hoveredNodeId } = this.store.state;
 
     g.selectAll('.label-group').each(function (d) {
       let isVisible = false;
-      const isDimmed = layout.isTreeMode ? (!d.isCenter && !layout.subgraphNodes.has(d.id)) : (selectedRingIndex !== null && normalizeLayer(d.camadasPorProfissao?.[selectedProfessionId]) !== selectedRingIndex);
+      const isDimmed = (layout.isTreeMode || layout.isLayerMode)
+        ? (!d.isCenter && !layout.subgraphNodes.has(d.id))
+        : false;
 
       if (!isDimmed) {
-        if (layout.isTreeMode && layout.subgraphNodes.has(d.id)) {
+        if ((layout.isTreeMode || layout.isLayerMode) && layout.subgraphNodes.has(d.id)) {
           isVisible = true;
         } else if (hoveredNodeId === d.id) {
           isVisible = true;
-        } else if (selectedRingIndex !== null) {
-          const rawLayer = d.camadasPorProfissao?.[selectedProfessionId] || 10;
-          const layer = normalizeLayer(rawLayer);
-          if (layer === selectedRingIndex) {
-            isVisible = true;
-          }
         }
       }
 

@@ -100,7 +100,7 @@ export class ControlsView {
 
     if (this.btnReset) {
       this.btnReset.addEventListener('click', () => {
-        this.store.setState({ treeFocusNodeId: null });
+        this.store.setState({ treeFocusNodeId: null, selectedRingIndex: null });
         this.eventBus.emit('panel:hide');
         this.eventBus.emit('zoom:reset');
         this.eventBus.emit('layout:update', { animate: true });

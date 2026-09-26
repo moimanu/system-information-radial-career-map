@@ -22,20 +22,9 @@ export class TreeLayout {
     const maxRadius = 500;
     const baseStep = maxRadius / 10;
     const ringRadii = [];
-    const targetR10 = maxRadius;
 
     for (let i = 1; i <= 10; i++) {
-      if (selectedRingIndex && !treeFocusNodeId) {
-        if (i === selectedRingIndex) {
-          ringRadii[i] = targetR10;
-        } else if (i < selectedRingIndex) {
-          ringRadii[i] = (targetR10 / selectedRingIndex) * i;
-        } else {
-          ringRadii[i] = targetR10;
-        }
-      } else {
-        ringRadii[i] = baseStep * i;
-      }
+      ringRadii[i] = baseStep * i;
     }
 
     const subgraphNodes = getSubgraphNodes(treeFocusNodeId, arestas);
@@ -76,6 +65,6 @@ export class TreeLayout {
 
     nodePositions['CENTER_PROFESSION'] = { x: centerX, y: 35, isFocused: false };
 
-    return { ringRadii, nodePositions, isTreeMode: true, subgraphNodes };
+    return { ringRadii, nodePositions, isTreeMode: true, isLayerMode: false, subgraphNodes };
   }
 }
