@@ -670,7 +670,7 @@ svg#radial-graph {
   /* 4. Ajustes do Painel de Detalhes (Drawer inferior) */
   .detail-panel {
     top: auto;
-    bottom: 12px;
+    bottom: 0px;
     left: 12px;
     right: 12px;
     height: 55dvh;
@@ -678,6 +678,7 @@ svg#radial-graph {
     max-height: 80%;
     transform: translateY(0);
     border-radius: 16px 16px 0 0;
+    width: fit-content;
   }
 
   .detail-panel.hidden {
