@@ -11,12 +11,9 @@ export class GraphView {
   constructor(store, eventBus) {
     this.store = store;
     this.eventBus = eventBus;
-
     this.radialStrategy = new RadialLayout();
     this.treeStrategy = new TreeLayout();
     this.layerStrategy = new LayerLayout();
-
-    // Cache DOM container
     this.container = document.getElementById('graph-container');
     this.svg = null;
     this.containerGroup = null;
@@ -33,7 +30,6 @@ export class GraphView {
     this.svg = d3.select('#radial-graph')
       .attr('viewBox', `0 0 ${this.store.state.width} ${this.store.state.height}`);
 
-    // Arrowhead SVG Defs
     const defs = this.svg.append('defs');
     defs.append('marker')
       .attr('id', 'arrow')
@@ -61,7 +57,6 @@ export class GraphView {
 
     this.containerGroup = this.svg.append('g').attr('class', 'zoom-container');
 
-    // D3 Zoom Setup
     this.zoomBehavior = d3.zoom()
       .scaleExtent([0.3, 3])
       .on('zoom', (event) => {
@@ -70,7 +65,6 @@ export class GraphView {
 
     this.svg.call(this.zoomBehavior);
 
-    // Background Click Reset
     this.svg.on('click', (event) => {
       if (event.target.tagName === 'svg') {
         if (this.store.state.treeFocusNodeId || this.store.state.selectedRingIndex) {
@@ -82,7 +76,6 @@ export class GraphView {
       }
     });
 
-    // Window Resize Handler
     window.addEventListener('resize', () => {
       this.store.state.width = this.container.clientWidth;
       this.store.state.height = this.container.clientHeight;
@@ -158,7 +151,6 @@ export class GraphView {
     ringsGroup.selectAll('*').remove();
 
     if (layout.isLayerMode) {
-      // Draw a single defined circle connecting all vertices in layer mode
       ringsGroup.append('circle')
         .attr('cx', centerX)
         .attr('cy', centerY)
@@ -203,7 +195,7 @@ export class GraphView {
       }
     }
 
-    // 2. RENDER EDGES (Conexões) with d3.join()
+    // 2. RENDER EDGES
     const edgesGroup = g.select('.layer-edges');
     let edgeData = this.store.state.arestas;
 
@@ -252,7 +244,7 @@ export class GraphView {
         .attr('y2', d => layout.nodePositions[d.destino]?.y || 0);
     }
 
-    // 3. RENDER NODES (Vértices) with d3.join()
+    // 3. RENDER NODES
     const nodesGroup = g.select('.layer-nodes');
     let allNodes = [];
 
@@ -321,7 +313,7 @@ export class GraphView {
     nodesMerged.classed('dimmed', d => this.isNodeDimmed(d, layout));
     nodesMerged.select('circle').classed('selected', d => d.id === this.selectedNodeId);
 
-    // 4. RENDER LABELS with d3.join()
+    // 4. RENDER LABELS
     const labelsGroup = g.select('.layer-labels');
     let labelNodes = [];
 
@@ -400,7 +392,6 @@ export class GraphView {
 
     labelsMerged.classed('dimmed', d => this.isNodeDimmed(d, layout));
 
-    // Interaction Events
     nodesMerged
       .on('mouseenter', (event, d) => {
         if (d.isCenter) {

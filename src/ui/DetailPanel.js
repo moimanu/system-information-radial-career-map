@@ -5,11 +5,8 @@ export class DetailPanel {
   constructor(store, eventBus) {
     this.store = store;
     this.eventBus = eventBus;
-
-    // Cache DOM references once upon initialization
     this.panelEl = document.getElementById('detail-panel');
     this.closeBtn = document.getElementById('close-panel');
-
     this.codeEl = document.getElementById('discipline-code');
     this.nameEl = document.getElementById('discipline-name');
     this.periodEl = document.getElementById('discipline-period');
@@ -19,7 +16,6 @@ export class DetailPanel {
     this.chEl = document.getElementById('discipline-ch');
     this.chTeoricaEl = document.getElementById('ch-teorica');
     this.chPraticaEl = document.getElementById('ch-pratica');
-
     this.ementaEl = document.getElementById('discipline-ementa');
     this.objetivosEl = document.getElementById('discipline-objetivos');
     this.bibBasicaEl = document.getElementById('discipline-bib-basica');

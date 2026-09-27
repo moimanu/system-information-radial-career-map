@@ -28,24 +28,17 @@ export class TreeLayout {
       ringRadii[i] = baseStep * i;
     }
 
-    // 1. Identifica os nós do subgrafo e calcula os níveis de profundidade
     const subgraphNodes = getSubgraphNodes(treeFocusNodeId, arestas);
     const levels = computeTreeLevels(treeFocusNodeId, subgraphNodes, arestas);
-
     const levelKeys = Object.keys(levels).map(Number).sort((a, b) => a - b);
     const totalLevels = levelKeys.length;
-
-    // 2. Define espaçamento vertical mínimo entre níveis (evita compressão vertical)
     const minLevelHeight = 140;
     const levelHeight = Math.max(minLevelHeight, (height - 200) / Math.max(1, totalLevels - 1 || 1));
-
     const totalTreeHeight = (totalLevels - 1) * levelHeight;
     const startY = Math.max(120, centerY - totalTreeHeight / 2);
-
     const nodePositions = {};
-
-    // 3. Mapeia pais/antecedentes para ordenar filhos e evitar cruzamento de arestas
     const parentMap = {};
+
     arestas.forEach(edge => {
       if (subgraphNodes.has(edge.origem) && subgraphNodes.has(edge.destino)) {
         if (!parentMap[edge.destino]) parentMap[edge.destino] = [];
@@ -53,14 +46,11 @@ export class TreeLayout {
       }
     });
 
-    // Espaçamento horizontal mínimo por nó (em pixels) para legibilidade dos textos
     const minNodeSpacing = 190;
 
-    // 4. Posiciona os vértices focados em cada nível
     levelKeys.forEach((lvl, lvlIdx) => {
       const nodesInLvl = levels[lvl];
 
-      // Ordena os filhos com base na posição X média dos pais já posicionados
       if (lvlIdx > 0) {
         nodesInLvl.sort((a, b) => {
           const parentsA = parentMap[a] || [];
@@ -78,7 +68,6 @@ export class TreeLayout {
       const count = nodesInLvl.length;
       const y = startY + lvlIdx * levelHeight;
 
-      // Largura necessária proporcional à quantidade de nós no nível
       const requiredWidth = count * minNodeSpacing;
       const effectiveWidth = Math.max(width - 160, requiredWidth);
 
@@ -91,7 +80,6 @@ export class TreeLayout {
       });
     });
 
-    // 5. Posiciona nós fora do foco em disposição radial suave ao fundo
     disciplinas.forEach(d => {
       if (!nodePositions[d.id]) {
         const rawLayer = d.camadasPorProfissao?.[selectedProfessionId] || 10;

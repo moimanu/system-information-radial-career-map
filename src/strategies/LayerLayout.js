@@ -20,7 +20,6 @@ export class LayerLayout {
     const centerX = width / 2;
     const centerY = height / 2;
 
-    // Filter disciplines belonging strictly to the selected layer and active filters
     const layerNodes = disciplinas.filter(d => {
       const eixo = d.eixoFormacao || "";
       const natureza = d.natureza || "";
@@ -32,26 +31,18 @@ export class LayerLayout {
     });
 
     const N = layerNodes.length;
-
-    // Subgraph nodes: only the vertices of this specific layer
     const subgraphNodes = new Set(layerNodes.map(d => d.id));
-
-    // Dynamic & responsive radius calculation based on vertex count
-    // Ensures enough circumferential arc length (min ~160px per node label)
     const baseRadius = 220;
     const requiredRadiusForSpacing = N > 0 ? (N * 160) / (2 * Math.PI) : baseRadius;
     const layerRadius = Math.max(baseRadius, requiredRadiusForSpacing);
-
     const nodePositions = {};
 
-    // Center node is strictly the layer level label (e.g., "Nível 3")
     nodePositions['LAYER_CENTER_NODE'] = {
       x: centerX,
       y: centerY,
       layerName: `Nível ${selectedRingIndex}`
     };
 
-    // Calculate angular positions around the central ring
     layerNodes.forEach((d, j) => {
       const angle = (2 * Math.PI * j) / Math.max(1, N) - Math.PI / 2;
       nodePositions[d.id] = {

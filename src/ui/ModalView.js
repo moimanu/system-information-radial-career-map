@@ -5,8 +5,6 @@ export class ModalView {
   constructor(store, eventBus) {
     this.store = store;
     this.eventBus = eventBus;
-
-    // Cache DOM element references
     this.modalEl = document.getElementById('profession-modal');
     this.selectEl = document.getElementById('profession-select');
     this.closeBtn = document.getElementById('close-profession-modal');

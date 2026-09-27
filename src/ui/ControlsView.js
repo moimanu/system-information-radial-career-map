@@ -7,8 +7,6 @@ export class ControlsView {
   constructor(store, eventBus) {
     this.store = store;
     this.eventBus = eventBus;
-
-    // Cache DOM references once upon initialization
     this.eixosContainer = document.getElementById('eixos-filters');
     this.naturezaContainer = document.getElementById('natureza-filters');
     this.btnZoomIn = document.getElementById('btn-zoom-in');
@@ -88,7 +86,6 @@ export class ControlsView {
     });
   }
 
-  /** Update the fullscreen button icons based on current state */
   _updateFullscreenIcons() {
     const isFs = !!document.fullscreenElement;
     if (this.iconExpand) this.iconExpand.style.display = isFs ? 'none' : '';
@@ -117,17 +114,15 @@ export class ControlsView {
       });
     }
 
-    // Fullscreen toggle
     if (this.btnFullscreen) {
       this.btnFullscreen.addEventListener('click', () => {
         if (!document.fullscreenElement) {
-          document.documentElement.requestFullscreen().catch(() => {});
+          document.documentElement.requestFullscreen().catch(() => { });
         } else {
-          document.exitFullscreen().catch(() => {});
+          document.exitFullscreen().catch(() => { });
         }
       });
 
-      // Sync icon when fullscreen changes externally (e.g. Escape key)
       document.addEventListener('fullscreenchange', () => {
         this._updateFullscreenIcons();
       });
