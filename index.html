@@ -81,10 +81,10 @@
             transition: width 0.3s ease;
         }
 
-        /* Conteúdo dos Passos em Tela Cheia */
+        /* Conteúdo dos Passos */
         .step-container {
             position: relative;
-            min-height: 260px;
+            min-height: 280px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -95,36 +95,69 @@
             opacity: 0;
             transform: translateY(10px);
             transition: opacity 0.3s ease, transform 0.3s ease;
-            flex-direction: column;
-            gap: 20px;
         }
 
         .step-content.active {
-            display: flex;
+            display: grid;
+            grid-template-areas:
+                "text media"
+                "tip  media";
+            grid-template-columns: 1fr 220px;
+            column-gap: 28px;
+            row-gap: 16px;
+            align-items: center;
             opacity: 1;
             transform: translateY(0);
         }
 
+        .step-text-group {
+            grid-area: text;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
         .step-title {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--text-primary);
             line-height: 1.2;
         }
 
         .step-description {
-            font-size: 1.15rem;
+            font-size: 1.05rem;
             color: var(--text-secondary);
-            line-height: 1.6;
+            line-height: 1.5;
+        }
+
+        /* Mídia / GIF */
+        .step-media {
+            grid-area: media;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .step-gif {
+            width: 100%;
+            max-width: 220px;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+            box-shadow: none;
+            display: block;
         }
 
         /* Caixa da Dica de Uso */
         .tip-box {
+            grid-area: tip;
             background-color: var(--accent-light);
             border-left: 4px solid var(--accent-color);
-            padding: 16px 20px;
+            padding: 14px 18px;
             border-radius: 0 8px 8px 0;
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: var(--accent-hover);
             line-height: 1.5;
         }
@@ -198,19 +231,37 @@
             text-decoration: underline;
         }
 
-        /* Ajustes Mobile */
-        @media (max-width: 600px) {
+        /* Ajustes Responsivos (Mobile) */
+        @media (max-width: 680px) {
             .onboarding-screen {
                 padding: 24px 16px;
                 justify-content: space-between;
             }
 
+            .step-container {
+                min-height: auto;
+            }
+
+            .step-content.active {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+
             .step-title {
-                font-size: 1.5rem;
+                font-size: 1.4rem;
             }
 
             .step-description {
-                font-size: 1rem;
+                font-size: 0.98rem;
+            }
+
+            .step-media {
+                width: 100%;
+            }
+
+            .step-gif {
+                max-width: 180px;
             }
 
             .btn {
@@ -223,7 +274,6 @@
 <body>
 
     <main class="onboarding-screen">
-        <!-- Indicador de Progresso -->
         <header class="progress-header">
             <div class="progress-info">
                 <span>Passo <span id="current-step-num">1</span> de 6</span>
@@ -233,90 +283,116 @@
             </div>
         </header>
 
-        <!-- Conteúdo dos Steps -->
         <section class="step-container">
 
-            <!-- Step 1 -->
             <article class="step-content active" data-step="1">
-                <h1 class="step-title">Sobre o Projeto</h1>
-                <p class="step-description">
-                    O Mapa de Carreira Radial é uma ferramenta interativa para estudantes do Bacharelado em Sistemas de
-                    Informação (IFMG - Campus Ouro Branco).
-                </p>
+                <div class="step-text-group">
+                    <h1 class="step-title">Sobre o Projeto</h1>
+                    <p class="step-description">
+                        O Mapa de Carreira Radial é uma ferramenta interativa para estudantes do Bacharelado em Sistemas
+                        de
+                        Informação (IFMG - Campus Ouro Branco).
+                    </p>
+                </div>
+                <div class="step-media">
+                    <img src="src/assets/gif/1.gif" alt="Demonstração - Sobre o Projeto" class="step-gif">
+                </div>
                 <div class="tip-box">
                     <strong>Dica de uso:</strong> Explore as conexões entre disciplinas e o perfil profissional
                     desejado.
                 </div>
             </article>
 
-            <!-- Step 2 -->
             <article class="step-content" data-step="2">
-                <h2 class="step-title">Nó Central (Perfil Profissional)</h2>
-                <p class="step-description">
-                    Representa a profissão selecionada (ex: Engenheiro de Software, Web Designer ou Pesquisador).
-                </p>
+                <div class="step-text-group">
+                    <h2 class="step-title">Nó Central (Perfil Profissional)</h2>
+                    <p class="step-description">
+                        Representa a profissão selecionada (ex: Engenheiro de Software, Web Designer ou Pesquisador).
+                    </p>
+                </div>
+                <div class="step-media">
+                    <img src="src/assets/gif/2.gif" alt="Demonstração - Nó Central" class="step-gif">
+                </div>
                 <div class="tip-box">
-                    <strong>Dica de uso:</strong> Clique ou altere o nó central para mudar o foco da sua carreira.
+                    <strong>Dica de uso:</strong> Clique e altere o nó central para mudar o foco da sua carreira.
                 </div>
             </article>
 
-            <!-- Step 3 -->
             <article class="step-content" data-step="3">
-                <h2 class="step-title">Vértices (Disciplinas)</h2>
-                <p class="step-description">
-                    Círculos que representam as matérias do curso. A cor do círculo identifica o seu Eixo de Formação.
-                </p>
+                <div class="step-text-group">
+                    <h2 class="step-title">Vértices (Disciplinas)</h2>
+                    <p class="step-description">
+                        Círculos que representam as matérias do curso. A cor do círculo identifica o seu Eixo de
+                        Formação.
+                    </p>
+                </div>
+                <div class="step-media">
+                    <img src="src/assets/gif/3.gif" alt="Demonstração - Vértices" class="step-gif">
+                </div>
                 <div class="tip-box">
-                    <strong>Dica de uso:</strong> Clique em um vértice para ver detalhes e informações da disciplina.
+                    <strong>Dica de uso:</strong> Clique em um vértice (no modo árvore) para ver detalhes e informações
+                    da disciplina.
                 </div>
             </article>
 
-            <!-- Step 4 -->
             <article class="step-content" data-step="4">
-                <h2 class="step-title">Anéis Concêntricos (Relevância)</h2>
-                <p class="step-description">
-                    A distância do centro indica prioridade: quanto mais próxima do centro a disciplina estiver, mais
-                    essencial ela é para o perfil.
-                </p>
+                <div class="step-text-group">
+                    <h2 class="step-title">Anéis Concêntricos (Relevância)</h2>
+                    <p class="step-description">
+                        A distância do centro indica prioridade: quanto mais próxima do centro a disciplina estiver,
+                        mais
+                        essencial ela é para o perfil.
+                    </p>
+                </div>
+                <div class="step-media">
+                    <img src="src/assets/gif/4.gif" alt="Demonstração - Anéis Concêntricos" class="step-gif">
+                </div>
                 <div class="tip-box">
                     <strong>Dica de uso:</strong> Observe a proximidade dos nós para entender a prioridade do seu
-                    estudo.
+                    estudo. Clique em um nível para facilitar a visualização daquela camada.
                 </div>
             </article>
 
-            <!-- Step 5 -->
             <article class="step-content" data-step="5">
-                <h2 class="step-title">Arestas (Dependências de Conhecimento)</h2>
-                <p class="step-description">
-                    As setas conectam as disciplinas indicando o fluxo recomendado de aprendizado (dependências de
-                    conhecimento, não pré-requisitos formais).
-                </p>
+                <div class="step-text-group">
+                    <h2 class="step-title">Arestas (Dependências de Conhecimento)</h2>
+                    <p class="step-description">
+                        As setas conectam as disciplinas indicando o fluxo recomendado de aprendizado (dependências de
+                        conhecimento, não pré-requisitos formais).
+                    </p>
+                </div>
+                <div class="step-media">
+                    <img src="src/assets/gif/5.gif" alt="Demonstração - Arestas" class="step-gif">
+                </div>
                 <div class="tip-box">
                     <strong>Dica de uso:</strong> Siga as setas para planejar qual disciplina estudar primeiro.
                 </div>
             </article>
 
-            <!-- Step 6 -->
             <article class="step-content" data-step="6">
-                <h2 class="step-title">Eixos de Formação & Legenda</h2>
-                <p class="step-description">
-                    Agrupamento temático das disciplinas por cores na legenda do sistema.
-                </p>
+                <div class="step-text-group">
+                    <h2 class="step-title">Eixos de Formação & Legenda</h2>
+                    <p class="step-description">
+                        Agrupamento temático das disciplinas por cores na legenda do sistema.
+                    </p>
+                </div>
+                <div class="step-media">
+                    <img src="src/assets/gif/6.gif" alt="Demonstração - Legenda" class="step-gif">
+                </div>
                 <div class="tip-box">
-                    <strong>Dica de uso:</strong> Use os filtros da legenda para destacar eixos específicos no grafo.
+                    <strong>Dica de uso:</strong> Use os filtros no topo da página para destacar eixos específicos no
+                    grafo.
                 </div>
             </article>
 
         </section>
 
-        <!-- Botões de Navegação -->
         <div class="nav-buttons">
             <button id="btn-prev" class="btn btn-secondary" disabled>Anterior</button>
             <button id="btn-next" class="btn btn-primary">Próximo</button>
         </div>
     </main>
 
-    <!-- Rodapé com Crédito -->
     <footer class="app-footer">
         Desenvolvido por <a href="https://github.com/moimanu" target="_blank" rel="noopener noreferrer">Moisés
             Emanuel</a>
@@ -331,12 +407,10 @@
             const btnNext = document.getElementById('btn-next');
             const currentStepNum = document.getElementById('current-step-num');
             const progressFill = document.getElementById('progress-fill');
-            const steps = document.querySelectorAll('.step-content');
 
             function updateStep(newStep) {
                 if (newStep < 1 || newStep > totalSteps) return;
 
-                // Oculta step atual
                 const currentActive = document.querySelector('.step-content.active');
                 if (currentActive) {
                     currentActive.classList.remove('active');
@@ -344,7 +418,6 @@
 
                 currentStep = newStep;
 
-                // Exibe novo step após pequeno delay para animação suave
                 setTimeout(() => {
                     const nextActive = document.querySelector(`.step-content[data-step="${currentStep}"]`);
                     if (nextActive) {
@@ -352,11 +425,9 @@
                     }
                 }, 50);
 
-                // Atualiza numeração e barra de progresso
                 currentStepNum.textContent = currentStep;
                 progressFill.style.width = `${(currentStep / totalSteps) * 100}%`;
 
-                // Atualiza estado dos botões
                 btnPrev.disabled = currentStep === 1;
 
                 if (currentStep === totalSteps) {
