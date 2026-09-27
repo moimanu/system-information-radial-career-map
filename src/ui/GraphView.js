@@ -150,15 +150,25 @@ export class GraphView {
     const layout = strategy.calculate(this.store);
     const g = this.containerGroup;
     const duration = animate ? 750 : 0;
+    const centerX = this.store.state.width / 2;
+    const centerY = this.store.state.height / 2;
 
     // 1. RENDER RINGS
     const ringsGroup = g.select('.layer-rings');
     ringsGroup.selectAll('*').remove();
 
-    if (!layout.isTreeMode) {
-      const centerX = this.store.state.width / 2;
-      const centerY = this.store.state.height / 2;
-
+    if (layout.isLayerMode) {
+      // Draw a single defined circle connecting all vertices in layer mode
+      ringsGroup.append('circle')
+        .attr('cx', centerX)
+        .attr('cy', centerY)
+        .attr('r', layout.layerRadius)
+        .attr('class', 'layer-connecting-ring')
+        .attr('fill', 'none')
+        .attr('stroke', 'var(--accent-color)')
+        .attr('stroke-width', '2px')
+        .attr('stroke-dasharray', '6, 4');
+    } else if (!layout.isTreeMode) {
       for (let i = 1; i <= 10; i++) {
         const rOuter = layout.ringRadii[i];
         const rInner = layout.ringRadii[i - 1] || 0;
@@ -194,7 +204,6 @@ export class GraphView {
     }
 
     // 2. RENDER EDGES (Conexões) with d3.join()
-    // OTIMIZADO: Filtra apenas as arestas do subgrafo ativo antes do .join()
     const edgesGroup = g.select('.layer-edges');
     let edgeData = this.store.state.arestas;
 
@@ -217,7 +226,6 @@ export class GraphView {
             .attr('class', 'edge-line')
             .attr('marker-end', 'url(#arrow)');
 
-          // Posiciona instantaneamente as pontas da aresta sem animação inicial
           line
             .attr('x1', d => layout.nodePositions[d.origem]?.x || 0)
             .attr('y1', d => layout.nodePositions[d.origem]?.y || 0)
@@ -245,24 +253,28 @@ export class GraphView {
     }
 
     // 3. RENDER NODES (Vértices) with d3.join()
-    // OTIMIZADO: Mantém apenas os nós do subgrafo ativo antes do .join()
     const nodesGroup = g.select('.layer-nodes');
-    const profObj = this.store.state.profissoes.find(p => p.id === this.store.state.selectedProfessionId);
-    const centerNode = {
-      id: 'CENTER_PROFESSION',
-      nome: profObj ? profObj.nome : 'Profissão',
-      isCenter: true
-    };
+    let allNodes = [];
 
-    let filteredDisciplinas = this.store.state.disciplinas;
-
-    if (layout.isTreeMode || layout.isLayerMode) {
-      filteredDisciplinas = filteredDisciplinas.filter(d => layout.subgraphNodes.has(d.id));
+    if (layout.isLayerMode) {
+      const layerCenterNode = {
+        id: 'LAYER_CENTER_NODE',
+        nome: `Nível ${this.store.state.selectedRingIndex}`,
+        isLayerCenter: true
+      };
+      const filteredDisciplinas = this.store.state.disciplinas.filter(d => layout.subgraphNodes.has(d.id));
+      allNodes = [layerCenterNode, ...filteredDisciplinas];
+    } else if (layout.isTreeMode) {
+      allNodes = this.store.state.disciplinas.filter(d => layout.subgraphNodes.has(d.id));
+    } else {
+      const profObj = this.store.state.profissoes.find(p => p.id === this.store.state.selectedProfessionId);
+      const centerNode = {
+        id: 'CENTER_PROFESSION',
+        nome: profObj ? profObj.nome : 'Profissão',
+        isCenter: true
+      };
+      allNodes = [centerNode, ...this.store.state.disciplinas];
     }
-
-    const allNodes = (layout.isTreeMode || layout.isLayerMode)
-      ? filteredDisciplinas
-      : [centerNode, ...filteredDisciplinas];
 
     const nodesMerged = nodesGroup.selectAll('.node-group')
       .data(allNodes, d => d.id)
@@ -270,9 +282,8 @@ export class GraphView {
         enter => {
           const group = enter.append('g').attr('class', 'node-group');
           group.append('circle');
-          // Posiciona instantaneamente os novos vértices na posição correta sem animação
           group.attr('transform', d => {
-            const pos = layout.nodePositions[d.id] || { x: 0, y: 0 };
+            const pos = layout.nodePositions[d.id] || { x: centerX, y: centerY };
             return `translate(${pos.x}, ${pos.y})`;
           });
           return group;
@@ -282,10 +293,14 @@ export class GraphView {
       );
 
     nodesMerged.select('circle')
-      .attr('class', d => d.isCenter ? 'node-circle center-node' : 'node-circle')
-      .attr('r', d => d.isCenter ? 18 : 8)
+      .attr('class', d => {
+        if (d.isLayerCenter) return 'node-circle layer-center-node';
+        if (d.isCenter) return 'node-circle center-node';
+        return 'node-circle';
+      })
+      .attr('r', d => (d.isCenter || d.isLayerCenter) ? 22 : 8)
       .attr('fill', d => {
-        if (d.isCenter) return 'var(--accent-color)';
+        if (d.isCenter || d.isLayerCenter) return 'var(--accent-color)';
         const eixo = d.eixoFormacao || '';
         return EIXO_COLORS[eixo] || EIXO_COLORS.empty;
       });
@@ -293,12 +308,12 @@ export class GraphView {
     if (animate) {
       nodesMerged.transition().duration(duration)
         .attr('transform', d => {
-          const pos = layout.nodePositions[d.id] || { x: 0, y: 0 };
+          const pos = layout.nodePositions[d.id] || { x: centerX, y: centerY };
           return `translate(${pos.x}, ${pos.y})`;
         });
     } else {
       nodesMerged.attr('transform', d => {
-        const pos = layout.nodePositions[d.id] || { x: 0, y: 0 };
+        const pos = layout.nodePositions[d.id] || { x: centerX, y: centerY };
         return `translate(${pos.x}, ${pos.y})`;
       });
     }
@@ -306,20 +321,23 @@ export class GraphView {
     nodesMerged.classed('dimmed', d => this.isNodeDimmed(d, layout));
     nodesMerged.select('circle').classed('selected', d => d.id === this.selectedNodeId);
 
-    nodesGroup.selectAll('.node-group').sort((a, b) => {
-      const aDim = this.isNodeDimmed(a, layout);
-      const bDim = this.isNodeDimmed(b, layout);
-      if (aDim && !bDim) return -1;
-      if (!aDim && bDim) return 1;
-      return 0;
-    });
-
     // 4. RENDER LABELS with d3.join()
-    // OTIMIZADO: Usa apenas as disciplinas visíveis no layout
     const labelsGroup = g.select('.layer-labels');
-    const labelNodes = (layout.isTreeMode || layout.isLayerMode)
-      ? this.store.state.disciplinas.filter(d => layout.subgraphNodes.has(d.id))
-      : this.store.state.disciplinas;
+    let labelNodes = [];
+
+    if (layout.isLayerMode) {
+      const layerCenterLabel = {
+        id: 'LAYER_CENTER_NODE',
+        nome: `Nível ${this.store.state.selectedRingIndex}`,
+        isLayerCenter: true
+      };
+      const filtered = this.store.state.disciplinas.filter(d => layout.subgraphNodes.has(d.id));
+      labelNodes = [layerCenterLabel, ...filtered];
+    } else if (layout.isTreeMode) {
+      labelNodes = this.store.state.disciplinas.filter(d => layout.subgraphNodes.has(d.id));
+    } else {
+      labelNodes = this.store.state.disciplinas;
+    }
 
     const labelsMerged = labelsGroup.selectAll('.label-group')
       .data(labelNodes, d => d.id)
@@ -329,11 +347,10 @@ export class GraphView {
           group.append('rect').attr('class', 'label-bg');
           group.append('text')
             .attr('class', 'node-label')
-            .attr('dy', 22)
             .attr('text-anchor', 'middle');
-          // Posiciona instantaneamente as novas labels na posição correta sem animação
+
           group.attr('transform', d => {
-            const pos = layout.nodePositions[d.id] || { x: 0, y: 0 };
+            const pos = layout.nodePositions[d.id] || { x: centerX, y: centerY };
             return `translate(${pos.x}, ${pos.y})`;
           });
           return group;
@@ -342,22 +359,24 @@ export class GraphView {
         exit => exit.remove()
       );
 
-    labelsMerged.select('text').text(d => d.nome);
+    labelsMerged.select('text')
+      .attr('dy', d => d.isLayerCenter ? 5 : 22)
+      .text(d => d.nome);
 
     if (animate) {
       labelsMerged.transition().duration(duration)
         .attr('transform', d => {
-          const pos = layout.nodePositions[d.id] || { x: 0, y: 0 };
+          const pos = layout.nodePositions[d.id] || { x: centerX, y: centerY };
           return `translate(${pos.x}, ${pos.y})`;
         });
     } else {
       labelsMerged.attr('transform', d => {
-        const pos = layout.nodePositions[d.id] || { x: 0, y: 0 };
+        const pos = layout.nodePositions[d.id] || { x: centerX, y: centerY };
         return `translate(${pos.x}, ${pos.y})`;
       });
     }
 
-    labelsMerged.each(function () {
+    labelsMerged.each(function (d) {
       const group = d3.select(this);
       const textNode = group.select('text').node();
       const rectNode = group.select('rect');
@@ -365,8 +384,8 @@ export class GraphView {
         try {
           const bbox = textNode.getBBox();
           if (bbox.width > 0 && bbox.height > 0) {
-            const paddingX = 6;
-            const paddingY = 3;
+            const paddingX = d.isLayerCenter ? 10 : 6;
+            const paddingY = d.isLayerCenter ? 6 : 3;
             rectNode
               .attr('x', bbox.x - paddingX)
               .attr('y', bbox.y - paddingY)
@@ -388,6 +407,7 @@ export class GraphView {
           this.showRingTooltip(event, `${d.nome}`);
           return;
         }
+        if (d.isLayerCenter) return;
         if (this.isNodeDimmed(d, layout)) return;
         this.store.state.hoveredNodeId = d.id;
         this.updateLabelsVisibility(layout);
@@ -398,6 +418,7 @@ export class GraphView {
           this.hideRingTooltip();
           return;
         }
+        if (d.isLayerCenter) return;
         if (this.isNodeDimmed(d, layout)) return;
         this.store.state.hoveredNodeId = null;
         this.updateLabelsVisibility(layout);
@@ -405,6 +426,7 @@ export class GraphView {
       })
       .on('click', (event, d) => {
         event.stopPropagation();
+        if (d.isLayerCenter) return;
         if (d.isCenter) {
           this.hideRingTooltip();
           this.eventBus.emit('modal:show');
@@ -412,21 +434,16 @@ export class GraphView {
         }
         if (this.isNodeDimmed(d, layout)) return;
 
-        // Verifica se o modo árvore já está ativo antes de atualizar o estado
         const isAlreadyInTreeMode = this.store.state.treeFocusNodeId !== null;
-
-        // Define o nó selecionado para destaque visual (borda verde)
         this.selectedNodeId = isAlreadyInTreeMode ? d.id : null;
 
-        // Atualiza o layout focado no nó clicado (radial→árvore ou navegação na árvore)
         this.store.setState({ treeFocusNodeId: d.id, selectedRingIndex: null });
         this.updateNodePositions(true);
 
-        // Exibe o painel apenas se já estivesse no modo árvore
         if (isAlreadyInTreeMode) {
           this.eventBus.emit('panel:show', d);
         } else {
-          this.eventBus.emit('panel:hide'); // Garante que o painel feche ao transitar do radial
+          this.eventBus.emit('panel:hide');
         }
       });
 
@@ -441,7 +458,7 @@ export class GraphView {
     const { activeEixosFilters, activeNaturezaFilters, disciplinas } = this.store.state;
 
     g.selectAll('.node-group').each(function (d) {
-      if (d.isCenter) return;
+      if (d.isCenter || d.isLayerCenter) return;
       const eixo = d.eixoFormacao || "";
       const natureza = d.natureza || "";
       const isVisible = activeEixosFilters.has(eixo) && activeNaturezaFilters.has(natureza);
@@ -449,6 +466,7 @@ export class GraphView {
     });
 
     g.selectAll('.label-group').each(function (d) {
+      if (d.isLayerCenter) return;
       const eixo = d.eixoFormacao || "";
       const natureza = d.natureza || "";
       const isVisible = activeEixosFilters.has(eixo) && activeNaturezaFilters.has(natureza);
@@ -481,6 +499,11 @@ export class GraphView {
     const { hoveredNodeId } = this.store.state;
 
     g.selectAll('.label-group').each(function (d) {
+      if (d.isLayerCenter) {
+        d3.select(this).classed('visible', true);
+        return;
+      }
+
       let isVisible = false;
       const isDimmed = (layout.isTreeMode || layout.isLayerMode)
         ? (!d.isCenter && !layout.subgraphNodes.has(d.id))

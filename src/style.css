@@ -401,7 +401,7 @@ svg#radial-graph {
 
 .edge-line.highlighted {
   stroke: var(--accent-color);
-  stroke-width: 2.5px;
+  stroke-width: 1.5px;
 }
 
 .node-group {
@@ -685,4 +685,17 @@ svg#radial-graph {
   .main-content.panel-open .floating-top {
     display: none;
   }
+}
+
+/* Layer Mode Dynamic Center Node & Connecting Circle */
+.node-circle.layer-center-node {
+  fill: var(--accent-color);
+  stroke: #ffffff;
+  stroke-width: 3px;
+  pointer-events: none;
+}
+
+.layer-connecting-ring {
+  pointer-events: none;
+  animation: fadeIn 0.4s ease;
 }
