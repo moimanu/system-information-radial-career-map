@@ -786,3 +786,74 @@ svg#radial-graph {
   margin-right: 20px;
   text-align: left;
 }
+
+/* Balãozinho de Informações da Profissão */
+.profession-info-tooltip {
+  position: absolute;
+  z-index: 100;
+  width: 280px;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  display: none;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  pointer-events: auto;
+}
+
+.profession-info-tooltip.visible {
+  display: block;
+  animation: fadeInTooltip 0.2s ease-in-out;
+}
+
+.profession-info-tooltip::after {
+  content: "";
+  position: absolute;
+  right: -8px;
+  bottom: 12px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 8px solid var(--bg-primary);
+}
+
+.profession-info-tooltip::before {
+  content: "";
+  position: absolute;
+  right: -9px;
+  bottom: 12px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 8px solid var(--border-color);
+}
+
+.profession-info-tooltip .tooltip-title {
+  font-weight: bold;
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+  color: var(--accent-color);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 4px;
+}
+
+.profession-info-tooltip .tooltip-body {
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+@keyframes fadeInTooltip {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
