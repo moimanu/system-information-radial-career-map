@@ -53,6 +53,9 @@ async function initApp() {
 
     eventBus.on('modal:show', () => modalView.show());
 
+    if (!store.state.selectedProfessionId) {
+      modalView.show();
+    }
   } catch (err) {
     console.error("Erro ao carregar os dados:", err);
   }
