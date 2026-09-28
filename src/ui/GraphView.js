@@ -148,19 +148,35 @@ export class GraphView {
 
     // 1. RENDER RINGS
     const ringsGroup = g.select('.layer-rings');
-    ringsGroup.selectAll('*').remove();
 
     if (layout.isLayerMode) {
-      ringsGroup.append('circle')
+      const selectedRing = this.store.state.selectedRingIndex;
+      // Calcula o raio original que a camada possuía no modo radial concêntrico
+      const maxRadius = 500;
+      const initialRadius = (maxRadius / 10) * selectedRing;
+
+      // Limpa anéis anteriores mantendo a animação no círculo de conexão
+      ringsGroup.selectAll('*').remove();
+
+      const layerRing = ringsGroup.append('circle')
         .attr('cx', centerX)
         .attr('cy', centerY)
-        .attr('r', layout.layerRadius)
+        .attr('r', initialRadius)
         .attr('class', 'layer-connecting-ring')
         .attr('fill', 'none')
         .attr('stroke', 'var(--accent-color)')
         .attr('stroke-width', '2px')
         .attr('stroke-dasharray', '6, 4');
+
+      if (animate) {
+        layerRing.transition()
+          .duration(duration)
+          .attr('r', layout.layerRadius);
+      } else {
+        layerRing.attr('r', layout.layerRadius);
+      }
     } else if (!layout.isTreeMode) {
+      ringsGroup.selectAll('*').remove();
       for (let i = 1; i <= 10; i++) {
         const rOuter = layout.ringRadii[i];
         const rInner = layout.ringRadii[i - 1] || 0;
@@ -193,6 +209,8 @@ export class GraphView {
           .attr('r', rOuter)
           .attr('class', 'ring-line');
       }
+    } else {
+      ringsGroup.selectAll('*').remove();
     }
 
     // 2. RENDER EDGES

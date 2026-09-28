@@ -19,37 +19,44 @@ export class ModalView {
   renderProfessions() {
     if (!this.selectEl) return;
     this.selectEl.innerHTML = '';
+
+    // Opção padrão quando nenhuma profissão está selecionada
+    const defaultOpt = document.createElement('option');
+    defaultOpt.value = '';
+    defaultOpt.textContent = 'Selecione uma profissão';
+    defaultOpt.disabled = true;
+    defaultOpt.selected = !this.store.state.selectedProfessionId;
+    this.selectEl.appendChild(defaultOpt);
+
     this.store.state.profissoes.forEach(p => {
       const opt = document.createElement('option');
       opt.value = p.id;
       opt.textContent = p.nome;
+      if (p.id === this.store.state.selectedProfessionId) {
+        opt.selected = true;
+      }
       this.selectEl.appendChild(opt);
     });
-
-    if (this.store.state.selectedProfessionId) {
-      this.selectEl.value = this.store.state.selectedProfessionId;
-    }
   }
 
   bindEvents() {
-    if (this.selectEl) {
-      this.selectEl.addEventListener('change', (e) => {
-        this.store.setState({
-          selectedProfessionId: e.target.value,
-          treeFocusNodeId: null
-        });
-        this.eventBus.emit('panel:hide');
-        this.hide();
-        this.eventBus.emit('layout:update', { animate: true });
-      });
-    }
-
     if (this.closeBtn) {
       this.closeBtn.addEventListener('click', () => this.hide());
     }
 
     if (this.confirmBtn) {
-      this.confirmBtn.addEventListener('click', () => this.hide());
+      this.confirmBtn.addEventListener('click', () => {
+        const selectedValue = this.selectEl.value;
+        if (selectedValue) {
+          this.store.setState({
+            selectedProfessionId: selectedValue,
+            treeFocusNodeId: null
+          });
+          this.eventBus.emit('panel:hide');
+          this.hide();
+          this.eventBus.emit('layout:update', { animate: true });
+        }
+      });
     }
 
     if (this.modalEl) {
@@ -62,9 +69,7 @@ export class ModalView {
   }
 
   show() {
-    if (this.selectEl && this.store.state.selectedProfessionId) {
-      this.selectEl.value = this.store.state.selectedProfessionId;
-    }
+    this.renderProfessions();
     if (this.modalEl) {
       this.modalEl.classList.remove('hidden');
     }

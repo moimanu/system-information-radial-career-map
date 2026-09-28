@@ -29,7 +29,7 @@ async function initApp() {
     activeEixosFilters.add("");
 
     const activeNaturezaFilters = new Set(["Obrigatória", "Optativa", ""]);
-    const selectedProfessionId = profissoes.length > 0 ? profissoes[0].id : null;
+    const selectedProfessionId = null;
 
     store.setState({
       profissoes,
