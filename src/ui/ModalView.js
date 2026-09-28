@@ -1,50 +1,87 @@
 /**
- * ModalView - DOM UI Controller for profession selection modal popup.
+ * ModalView - DOM UI Controller para seleção de profissões via dropdown customizado.
  */
 export class ModalView {
   constructor(store, eventBus) {
     this.store = store;
     this.eventBus = eventBus;
     this.modalEl = document.getElementById('profession-modal');
-    this.selectEl = document.getElementById('profession-select');
     this.closeBtn = document.getElementById('close-profession-modal');
     this.confirmBtn = document.getElementById('btn-confirm-profession');
+
+    // Elementos do Dropdown Customizado
+    this.dropdownEl = document.getElementById('custom-dropdown');
+    this.triggerEl = document.getElementById('dropdown-trigger');
+    this.labelEl = document.getElementById('dropdown-label');
+    this.optionsContainer = document.getElementById('dropdown-options');
+
+    this.selectedValue = null;
   }
 
   init() {
+    this.selectedValue = this.store.state.selectedProfessionId || null;
     this.renderProfessions();
     this.bindEvents();
     this.updateConfirmButtonState();
   }
 
   renderProfessions() {
-    if (!this.selectEl) return;
-    this.selectEl.innerHTML = '';
+    if (!this.optionsContainer) return;
+    this.optionsContainer.innerHTML = '';
 
-    // Opção padrão quando nenhuma profissão está selecionada
-    const defaultOpt = document.createElement('option');
-    defaultOpt.value = '';
-    defaultOpt.textContent = 'Selecione uma profissão';
-    defaultOpt.disabled = true;
-    defaultOpt.selected = !this.store.state.selectedProfessionId;
-    this.selectEl.appendChild(defaultOpt);
+    const currentSelectedId = this.selectedValue;
+    const currentProf = this.store.state.profissoes.find(p => p.id === currentSelectedId);
+
+    if (currentProf) {
+      this.labelEl.textContent = currentProf.nome;
+    } else {
+      this.labelEl.textContent = 'Selecione uma profissão';
+    }
 
     this.store.state.profissoes.forEach(p => {
-      const opt = document.createElement('option');
-      opt.value = p.id;
-      opt.textContent = p.nome;
-      if (p.id === this.store.state.selectedProfessionId) {
-        opt.selected = true;
+      const optionEl = document.createElement('div');
+      optionEl.className = 'dropdown-option';
+      if (p.id === currentSelectedId) {
+        optionEl.classList.add('selected');
       }
-      this.selectEl.appendChild(opt);
+      optionEl.textContent = p.nome;
+
+      optionEl.addEventListener('click', () => {
+        this.selectedValue = p.id;
+        this.labelEl.textContent = p.nome;
+        this.closeDropdown();
+        this.renderProfessions();
+        this.updateConfirmButtonState();
+      });
+
+      this.optionsContainer.appendChild(optionEl);
     });
 
     this.updateConfirmButtonState();
   }
 
+  toggleDropdown() {
+    const isHidden = this.optionsContainer.classList.contains('hidden');
+    if (isHidden) {
+      this.openDropdown();
+    } else {
+      this.closeDropdown();
+    }
+  }
+
+  openDropdown() {
+    this.optionsContainer.classList.remove('hidden');
+    this.dropdownEl.classList.add('open');
+  }
+
+  closeDropdown() {
+    this.optionsContainer.classList.add('hidden');
+    this.dropdownEl.classList.remove('open');
+  }
+
   updateConfirmButtonState() {
-    if (!this.confirmBtn || !this.selectEl) return;
-    const hasSelection = Boolean(this.selectEl.value);
+    if (!this.confirmBtn) return;
+    const hasSelection = Boolean(this.selectedValue);
 
     this.confirmBtn.disabled = !hasSelection;
     if (hasSelection) {
@@ -55,15 +92,22 @@ export class ModalView {
   }
 
   bindEvents() {
-    if (this.selectEl) {
-      this.selectEl.addEventListener('change', () => {
-        this.updateConfirmButtonState();
+    if (this.triggerEl) {
+      this.triggerEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.toggleDropdown();
       });
     }
 
+    // Fecha o dropdown caso o usuário clique fora dele
+    document.addEventListener('click', (e) => {
+      if (this.dropdownEl && !this.dropdownEl.contains(e.target)) {
+        this.closeDropdown();
+      }
+    });
+
     if (this.closeBtn) {
       this.closeBtn.addEventListener('click', () => {
-        // Só permite fechar se já existir uma profissão escolhida anteriormente no Store
         if (this.store.state.selectedProfessionId) {
           this.hide();
         }
@@ -72,10 +116,9 @@ export class ModalView {
 
     if (this.confirmBtn) {
       this.confirmBtn.addEventListener('click', () => {
-        const selectedValue = this.selectEl.value;
-        if (selectedValue) {
+        if (this.selectedValue) {
           this.store.setState({
-            selectedProfessionId: selectedValue,
+            selectedProfessionId: this.selectedValue,
             treeFocusNodeId: null
           });
           this.eventBus.emit('panel:hide');
@@ -87,7 +130,6 @@ export class ModalView {
 
     if (this.modalEl) {
       this.modalEl.addEventListener('click', (e) => {
-        // Só permite fechar pelo backdrop se já houver profissão selecionada
         if (e.target === this.modalEl && this.store.state.selectedProfessionId) {
           this.hide();
         }
@@ -96,9 +138,10 @@ export class ModalView {
   }
 
   show() {
+    this.selectedValue = this.store.state.selectedProfessionId || null;
     this.renderProfessions();
+    this.closeDropdown();
 
-    // Oculta o botão 'X' de fechar se for o primeiro acesso (sem profissão definida)
     if (this.closeBtn) {
       this.closeBtn.style.display = this.store.state.selectedProfessionId ? 'block' : 'none';
     }
@@ -109,6 +152,7 @@ export class ModalView {
   }
 
   hide() {
+    this.closeDropdown();
     if (this.modalEl) {
       this.modalEl.classList.add('hidden');
     }

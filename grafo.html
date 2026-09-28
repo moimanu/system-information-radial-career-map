@@ -113,9 +113,13 @@
         </div>
         <p class="modal-subtitle">Escolha uma profissão para visualizar o mapa de carreira correspondente:</p>
         <div class="modal-body">
-          <select id="profession-select">
-            <option value="">Carregando profissões...</option>
-          </select>
+          <div id="custom-dropdown" class="custom-dropdown">
+            <button type="button" id="dropdown-trigger" class="dropdown-trigger">
+              <span id="dropdown-label">Selecione uma profissão</span>
+              <span class="dropdown-arrow">▼</span>
+            </button>
+            <div id="dropdown-options" class="dropdown-options hidden"></div>
+          </div>
         </div>
         <div class="modal-footer">
           <button id="btn-confirm-profession" class="btn-primary">Confirmar</button>
