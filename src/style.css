@@ -600,6 +600,7 @@ svg#radial-graph {
   justify-content: flex-end;
 }
 
+/* Atualização nas regras do Botão Primário e Modais */
 .btn-primary {
   padding: 10px 20px;
   background-color: var(--accent-color);
@@ -609,11 +610,18 @@ svg#radial-graph {
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, opacity 0.2s, cursor 0.2s;
 }
 
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled) {
   background-color: var(--accent-hover);
+}
+
+.btn-primary:disabled,
+.btn-primary.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 /* Mobile Responsiveness — Ajustes de UI e Viewport */

@@ -14,6 +14,7 @@ export class ModalView {
   init() {
     this.renderProfessions();
     this.bindEvents();
+    this.updateConfirmButtonState();
   }
 
   renderProfessions() {
@@ -37,11 +38,36 @@ export class ModalView {
       }
       this.selectEl.appendChild(opt);
     });
+
+    this.updateConfirmButtonState();
+  }
+
+  updateConfirmButtonState() {
+    if (!this.confirmBtn || !this.selectEl) return;
+    const hasSelection = Boolean(this.selectEl.value);
+
+    this.confirmBtn.disabled = !hasSelection;
+    if (hasSelection) {
+      this.confirmBtn.classList.remove('disabled');
+    } else {
+      this.confirmBtn.classList.add('disabled');
+    }
   }
 
   bindEvents() {
+    if (this.selectEl) {
+      this.selectEl.addEventListener('change', () => {
+        this.updateConfirmButtonState();
+      });
+    }
+
     if (this.closeBtn) {
-      this.closeBtn.addEventListener('click', () => this.hide());
+      this.closeBtn.addEventListener('click', () => {
+        // Só permite fechar se já existir uma profissão escolhida anteriormente no Store
+        if (this.store.state.selectedProfessionId) {
+          this.hide();
+        }
+      });
     }
 
     if (this.confirmBtn) {
@@ -61,7 +87,8 @@ export class ModalView {
 
     if (this.modalEl) {
       this.modalEl.addEventListener('click', (e) => {
-        if (e.target === this.modalEl) {
+        // Só permite fechar pelo backdrop se já houver profissão selecionada
+        if (e.target === this.modalEl && this.store.state.selectedProfessionId) {
           this.hide();
         }
       });
@@ -70,6 +97,12 @@ export class ModalView {
 
   show() {
     this.renderProfessions();
+
+    // Oculta o botão 'X' de fechar se for o primeiro acesso (sem profissão definida)
+    if (this.closeBtn) {
+      this.closeBtn.style.display = this.store.state.selectedProfessionId ? 'block' : 'none';
+    }
+
     if (this.modalEl) {
       this.modalEl.classList.remove('hidden');
     }
