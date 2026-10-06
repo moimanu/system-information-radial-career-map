@@ -4,7 +4,11 @@
 export class Store {
   constructor(eventBus) {
     this.eventBus = eventBus;
+    const initialTheme = this.getInitialTheme();
+    this.applyThemeToDOM(initialTheme);
+
     this.state = {
+      theme: initialTheme,
       profissoes: [],
       eixosFormacao: {},
       disciplinas: [],
@@ -22,6 +26,65 @@ export class Store {
       height: 0
     };
     this.subscribers = new Map();
+    this.initSystemThemeListener();
+  }
+
+  getInitialTheme() {
+    try {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark' || savedTheme === 'light') {
+        return savedTheme;
+      }
+    } catch (e) {
+      // localStorage pode falhar em modos estritos/privados
+    }
+
+    if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+    return 'light';
+  }
+
+  applyThemeToDOM(theme) {
+    if (typeof document !== 'undefined' && document.documentElement) {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+  }
+
+  initSystemThemeListener() {
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      mediaQuery.addEventListener('change', (e) => {
+        try {
+          if (!localStorage.getItem('theme')) {
+            this.setTheme(e.matches ? 'dark' : 'light', false);
+          }
+        } catch (err) {
+          this.setTheme(e.matches ? 'dark' : 'light', false);
+        }
+      });
+    }
+  }
+
+  setTheme(theme, persist = true) {
+    if (theme !== 'light' && theme !== 'dark') return;
+    this.state.theme = theme;
+    
+    if (persist) {
+      try {
+        localStorage.setItem('theme', theme);
+      } catch (e) {}
+    }
+
+    this.applyThemeToDOM(theme);
+    this.notify('theme');
+    this.eventBus.emit('theme:change', { theme });
+  }
+
+  toggleTheme() {
+    const nextTheme = this.state.theme === 'dark' ? 'light' : 'dark';
+    this.setTheme(nextTheme, true);
+    return nextTheme;
   }
 
   setState(partialState, notifyKey = null) {
@@ -59,3 +122,4 @@ export class Store {
     this.eventBus.emit('state:change', { state: this.state });
   }
 }
+

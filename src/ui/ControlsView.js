@@ -9,6 +9,9 @@ export class ControlsView {
     this.eventBus = eventBus;
     this.eixosContainer = document.getElementById('eixos-filters');
     this.naturezaContainer = document.getElementById('natureza-filters');
+    this.btnThemeToggle = document.getElementById('btn-theme-toggle');
+    this.iconSun = document.getElementById('icon-sun');
+    this.iconMoon = document.getElementById('icon-moon');
     this.btnZoomIn = document.getElementById('btn-zoom-in');
     this.btnZoomOut = document.getElementById('btn-zoom-out');
     this.btnReset = document.getElementById('btn-reset');
@@ -20,9 +23,19 @@ export class ControlsView {
   }
 
   init() {
+    this._updateThemeIcons(this.store.state.theme);
     this.renderEixosFilters();
     this.renderNaturezaFilters();
     this.bindEvents();
+  }
+
+  _updateThemeIcons(theme) {
+    const isDark = theme === 'dark';
+    if (this.iconSun) this.iconSun.style.display = isDark ? 'block' : 'none';
+    if (this.iconMoon) this.iconMoon.style.display = isDark ? 'none' : 'block';
+    if (this.btnThemeToggle) {
+      this.btnThemeToggle.title = isDark ? 'Mudar para Tema Claro' : 'Mudar para Tema Escuro';
+    }
   }
 
   renderEixosFilters() {
@@ -49,7 +62,7 @@ export class ControlsView {
 
       const colorDot = document.createElement('span');
       colorDot.className = 'eixo-color-dot';
-      colorDot.style.backgroundColor = EIXO_COLORS[key] || EIXO_COLORS.empty;
+      colorDot.style.backgroundColor = `var(--eixo-${key}, ${EIXO_COLORS[key] || EIXO_COLORS.empty})`;
 
       label.appendChild(checkbox);
       label.appendChild(colorDot);
@@ -176,6 +189,16 @@ export class ControlsView {
         this.eventBus.emit('layout:update', { animate: true });
       });
     }
+
+    if (this.btnThemeToggle) {
+      this.btnThemeToggle.addEventListener('click', () => {
+        this.store.toggleTheme();
+      });
+    }
+
+    this.eventBus.on('theme:change', ({ theme }) => {
+      this._updateThemeIcons(theme);
+    });
 
     if (this.btnFullscreen) {
       this.btnFullscreen.addEventListener('click', () => {

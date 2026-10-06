@@ -41,7 +41,7 @@ export class GraphView {
       .attr('orient', 'auto')
       .append('path')
       .attr('d', 'M0,-5L10,0L0,5')
-      .attr('fill', '#94a3b8');
+      .attr('fill', 'var(--edge-marker)');
 
     defs.append('marker')
       .attr('id', 'arrow-active')
@@ -53,7 +53,7 @@ export class GraphView {
       .attr('orient', 'auto')
       .append('path')
       .attr('d', 'M0,-5L10,0L0,5')
-      .attr('fill', '#2e7d32');
+      .attr('fill', 'var(--accent-color)');
 
     this.containerGroup = this.svg.append('g').attr('class', 'zoom-container');
 
@@ -311,8 +311,8 @@ export class GraphView {
       .attr('r', d => (d.isCenter || d.isLayerCenter) ? 22 : 8)
       .attr('fill', d => {
         if (d.isCenter || d.isLayerCenter) return 'var(--accent-color)';
-        const eixo = d.eixoFormacao || '';
-        return EIXO_COLORS[eixo] || EIXO_COLORS.empty;
+        const eixo = d.eixoFormacao || 'empty';
+        return `var(--eixo-${eixo}, ${EIXO_COLORS[eixo] || EIXO_COLORS.empty})`;
       });
 
     if (animate) {

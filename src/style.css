@@ -1,40 +1,93 @@
-/* 60:30:10 Color Palette & UI Requirements */
+/* 60:30:10 Color Palette & UI Design System Tokens */
 :root {
-  /* 60% Dominant Background: Branco / Off-white */
+  /* Surface & Background */
   --bg-primary: #ffffff;
-
-  /* 30% Secondary / Structural: Cinza muito claro */
   --bg-secondary: #f4f6f8;
   --bg-card: #eef2f5;
   --border-color: #dcdfe4;
 
-  /* 10% Accent: Verde */
+  /* Accent & Interactive */
   --accent-color: #2e7d32;
   --accent-hover: #1b5e20;
   --accent-light: #e8f5e9;
 
-  /* Text: Cinza muito escuro */
+  /* Text Colors */
   --text-primary: #1f2937;
   --text-secondary: #4b5563;
   --text-muted: #6b7280;
+  --text-inverse: #ffffff;
 
-  /* Pastel Colors for Eixos de Formação */
-  --eixo-mat: #aec6cf;
-  /* Pastel Blue */
-  --eixo-comp: #ffb3ba;
-  /* Pastel Pink/Red */
-  --eixo-ti: #b5ead7;
-  /* Pastel Mint/Green */
-  --eixo-adm: #ffdfba;
-  /* Pastel Peach/Orange */
-  --eixo-cpl: #e2f0cb;
-  /* Pastel Lime */
-  --eixo-pso: #c7ceea;
-  /* Pastel Purple/Lavender */
-  --eixo-empty: #d3d3d3;
-  /* Soft Gray */
+  /* Canvas Specific Tokens */
+  --edge-color: #dee4eb;
+  --edge-marker: #94a3b8;
+  --node-stroke: #ffffff;
+  --label-bg: #ffffff;
+  --label-border: #dcdfe4;
+  --ring-line: #dcdfe4;
+  --ring-hover-bg: rgba(46, 125, 50, 0.05);
+  --ring-active-bg: rgba(46, 125, 50, 0.08);
+
+  /* Shadows / Overlays */
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --modal-overlay-bg: rgba(0, 0, 0, 0.4);
+
+  /* Pastel Colors for Eixos de Formação (Light Mode) */
+  --eixo-mat: #aec6cf;   /* Pastel Blue */
+  --eixo-comp: #ffb3ba;  /* Pastel Pink/Red */
+  --eixo-ti: #b5ead7;    /* Pastel Mint/Green */
+  --eixo-adm: #ffdfba;   /* Pastel Peach/Orange */
+  --eixo-cpl: #e2f0cb;   /* Pastel Lime */
+  --eixo-pso: #c7ceea;   /* Pastel Purple/Lavender */
+  --eixo-empty: #d3d3d3; /* Soft Gray */
 
   --detail-panel-width: 380px;
+}
+
+/* Dark Mode Theme Tokens */
+[data-theme="dark"] {
+  /* Surface & Background */
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --bg-card: #283344;
+  --border-color: #374151;
+
+  /* Accent & Interactive */
+  --accent-color: #4caf50;
+  --accent-hover: #66bb6a;
+  --accent-light: rgba(76, 175, 80, 0.18);
+
+  /* Text Colors */
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  --text-inverse: #111827;
+
+  /* Canvas Specific Tokens */
+  --edge-color: #374151;
+  --edge-marker: #6b7280;
+  --node-stroke: #111827;
+  --label-bg: #1f2937;
+  --label-border: #374151;
+  --ring-line: #374151;
+  --ring-hover-bg: rgba(76, 175, 80, 0.10);
+  --ring-active-bg: rgba(76, 175, 80, 0.18);
+
+  /* Shadows / Overlays */
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.55);
+  --modal-overlay-bg: rgba(0, 0, 0, 0.7);
+
+  /* Eixos de Formação (Contraste otimizado para Dark Mode) */
+  --eixo-mat: #7ea8be;   /* Soft Blue */
+  --eixo-comp: #e57373;  /* Coral Red */
+  --eixo-ti: #81c784;    /* Mint Green */
+  --eixo-adm: #ffb74d;   /* Warm Orange */
+  --eixo-cpl: #aed581;   /* Soft Lime */
+  --eixo-pso: #b39ddb;   /* Soft Purple */
+  --eixo-empty: #616161; /* Medium Dark Gray */
 }
 
 html::-webkit-scrollbar,
@@ -348,7 +401,7 @@ svg#radial-graph {
 
 .ring-line {
   fill: none;
-  stroke: var(--border-color);
+  stroke: var(--ring-line);
   stroke-dasharray: 4, 4;
   stroke-width: 1.5px;
   pointer-events: none;
@@ -362,11 +415,11 @@ svg#radial-graph {
 }
 
 .ring-area-hover:hover {
-  fill: rgba(46, 125, 50, 0.05);
+  fill: var(--ring-hover-bg);
 }
 
 .ring-area-hover.active-layer {
-  fill: rgba(46, 125, 50, 0.08);
+  fill: var(--ring-active-bg);
   stroke: var(--accent-color);
   stroke-width: 1.5px;
   stroke-dasharray: 6, 3;
@@ -376,12 +429,12 @@ svg#radial-graph {
   position: absolute;
   pointer-events: none;
   background-color: var(--text-primary);
-  color: #ffffff;
+  color: var(--text-inverse);
   padding: 4px 10px;
   border-radius: 6px;
   font-size: 0.8rem;
   font-weight: 600;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md);
   opacity: 0;
   transition: opacity 0.15s ease, transform 0.15s ease;
   z-index: 30;
@@ -393,7 +446,7 @@ svg#radial-graph {
 }
 
 .edge-line {
-  stroke: #dee4eb;
+  stroke: var(--edge-color);
   stroke-width: 0.8px;
   fill: none;
   transition: opacity 0.3s;
@@ -409,7 +462,7 @@ svg#radial-graph {
 }
 
 .node-circle {
-  stroke: #ffffff;
+  stroke: var(--node-stroke);
   stroke-width: 2px;
   transition: r 0.2s, stroke 0.2s;
 }
@@ -435,8 +488,8 @@ svg#radial-graph {
 }
 
 .label-bg {
-  fill: #ffffff;
-  stroke: #dcdfe4;
+  fill: var(--label-bg);
+  stroke: var(--label-border);
   stroke-width: 1px;
   rx: 4px;
   ry: 4px;
@@ -698,7 +751,7 @@ svg#radial-graph {
 /* Layer Mode Dynamic Center Node & Connecting Circle */
 .node-circle.layer-center-node {
   fill: var(--accent-color);
-  stroke: #ffffff;
+  stroke: var(--node-stroke);
   stroke-width: 3px;
   pointer-events: none;
 }

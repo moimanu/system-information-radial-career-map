@@ -5,6 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Onboarding - Mapa de Carreira Radial</title>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const theme = (savedTheme === 'dark' || savedTheme === 'light')
+                ? savedTheme
+                : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
     <style>
         /* CSS Reset & Variáveis Base */
         :root {
@@ -17,6 +26,19 @@
             --accent-light: #e8f5e9;
             --text-primary: #1f2937;
             --text-secondary: #4b5563;
+            --text-muted: #6b7280;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #111827;
+            --bg-secondary: #1f2937;
+            --bg-card: #283344;
+            --border-color: #374151;
+            --accent-color: #4caf50;
+            --accent-hover: #66bb6a;
+            --accent-light: rgba(76, 175, 80, 0.18);
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
             --text-muted: #6b7280;
         }
 
